@@ -1,2677 +1,747 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STEWARD — North Castle Fiscal Transparency</title>
-  <!-- STEWARD v5.4.0 — Professional civic UI · green sustainability -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f2f6f3;
-      --bg-elevated: #ffffff;
-      --bg-card: #ffffff;
-      --bg-muted: #e8efea;
-      --text: #0c1a14;
-      --text-muted: #4a6256;
-      --text-dim: #7a9186;
-      --accent: #0d6b3f;
-      --accent-light: #16a34a;
-      --accent-soft: rgba(13, 107, 63, 0.07);
-      --accent-border: rgba(13, 107, 63, 0.14);
-      --accent-hover: rgba(13, 107, 63, 0.28);
-      --accent-glow: rgba(13, 107, 63, 0.22);
-      --success: #0d6b3f;
-      --success-dim: rgba(13, 107, 63, 0.1);
-      --warm: #0d6b3f;
-      --warm-dim: rgba(13, 107, 63, 0.07);
-      --shadow-xs: 0 1px 2px rgba(12, 26, 20, 0.04);
-      --shadow-sm: 0 4px 16px rgba(12, 26, 20, 0.06);
-      --shadow-md: 0 12px 40px rgba(12, 26, 20, 0.08);
-      --shadow-lg: 0 24px 64px rgba(12, 26, 20, 0.1);
-      --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 22px;
-      --radius-full: 999px;
-      --font-display: 'Fraunces', Georgia, serif;
-      --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
-      --navy: var(--bg);
-      --navy-mid: var(--bg-elevated);
-      --navy-light: var(--bg-card);
-      --cream: var(--text);
-      --cream-muted: var(--text-muted);
-      --gold: var(--accent);
-      --gold-bright: #ffffff;
-      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --nav-h: 68px;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: #a8c4b0 var(--bg);
-    }
-
-    body {
-      font-family: var(--font-ui);
-      background: var(--bg);
-      background-image:
-        radial-gradient(ellipse 90% 60% at 50% -15%, rgba(22, 163, 74, 0.09), transparent 55%),
-        radial-gradient(ellipse 50% 40% at 100% 20%, rgba(13, 107, 63, 0.05), transparent);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    ::selection { background: var(--accent); color: #fff; }
-
-    /* ——— Nav (Tesla-style fixed) ——— */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      height: var(--nav-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 clamp(1.25rem, 4vw, 3rem);
-      background: rgba(255, 255, 255, 0.78);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      border-bottom: 1px solid rgba(13, 107, 63, 0.08);
-      transition: background 0.45s var(--ease), box-shadow 0.45s var(--ease);
-    }
-
-    .nav.scrolled {
-      background: rgba(255, 255, 255, 0.94);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .nav.scrolled .nav-brand,
-    .nav.scrolled .nav-links a { color: var(--text); }
-
-    .nav-brand {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 0.25rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      padding: 0.5rem 0.85rem;
-      border-radius: 4px;
-      transition: color 0.25s, background 0.25s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active { color: var(--text); background: var(--accent-soft); }
-
-    .nav-cta {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.6rem 1.35rem;
-      border-radius: var(--radius-full);
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 4px 14px var(--accent-glow);
-      transition: transform 0.25s var(--ease-out), box-shadow 0.25s, background 0.25s;
-    }
-
-    .nav-cta:hover {
-      background: #0a5a34;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px var(--accent-glow);
-      color: #fff;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-    }
-
-    /* Scroll progress */
-    .scroll-progress {
-      position: fixed;
-      top: var(--nav-h);
-      left: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #86b896, var(--accent));
-      z-index: 1001;
-      width: 0%;
-      transition: width 0.08s linear;
-    }
-
-    /* ——— Hero (Tesla full-bleed) ——— */
-    .hero {
-      position: relative;
-      height: 100vh;
-      min-height: 600px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute;
-      inset: -8%;
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.08);
-      animation: kenBurns 22s ease-in-out infinite alternate;
-      will-change: transform;
-    }
-
-  @keyframes kenBurns {
-      from { transform: scale(1.08) translate(0, 0); }
-      to { transform: scale(1.18) translate(-1.5%, -1%); }
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(115deg, rgba(242,246,243,0.88) 0%, rgba(242,246,243,0.45) 45%, rgba(242,246,243,0.7) 100%),
-        linear-gradient(180deg, transparent 55%, rgba(242,246,243,0.98) 100%);
-    }
-
-    .hero-panel {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(24px) saturate(160%);
-      -webkit-backdrop-filter: blur(24px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: var(--radius-lg);
-      padding: clamp(2rem, 5vw, 2.75rem) clamp(1.75rem, 4vw, 2.5rem);
-      box-shadow: var(--shadow-lg);
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    .hero .hero-content h1,
-    .hero .hero-plain,
-    .hero .hero-eyebrow { color: var(--text); }
-    .hero .hero-plain strong { color: var(--accent); }
-    .hero .intro-pill {
-      background: rgba(255,255,255,0.85);
-      border-color: var(--accent-border);
-      color: var(--text);
-    }
-    .hero .hero-stat {
-      background: linear-gradient(145deg, #fff 0%, #f0f7f2 100%);
-      border-color: var(--accent-border);
-      box-shadow: var(--shadow-sm);
-    }
-    .hero .hero-stat-value { color: var(--accent); }
-    .hero .scroll-cue { color: var(--text-muted); }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: calc(var(--nav-h) + 2rem) 1.5rem 2rem;
-      max-width: 820px;
-      animation: fadeUp 1.2s var(--ease-out) both;
-    }
-
-    .hero-plain {
-      font-size: 1.15rem;
-      line-height: 1.65;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-      font-weight: 400;
-    }
-
-    .intro-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .intro-pill {
-      padding: 0.45rem 0.9rem;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 100px;
-      font-size: 0.82rem;
-      backdrop-filter: blur(8px);
-    }
-
-    .scroll-cue {
-      position: absolute;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.35rem;
-      color: var(--text-muted);
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      animation: bounce 2s ease-in-out infinite;
-    }
-
-    .scroll-cue::after {
-      content: '';
-      width: 1px;
-      height: 28px;
-      background: linear-gradient(180deg, var(--accent), transparent);
-      border-radius: 1px;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* Visual showcase */
-    .showcase {
-      padding: 0;
-      background: var(--bg);
-    }
-
-    .showcase-frame {
-      max-width: 1240px;
-      margin: 0 auto 3.5rem;
-      padding: 0 clamp(1.25rem, 4vw, 3rem);
-    }
-
-    .showcase-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      grid-template-rows: 240px 240px;
-      gap: 6px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-    }
-
-    @media (max-width: 900px) {
-      .showcase-grid {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 200px 200px 200px;
-      }
-      .showcase-grid .showcase-main { grid-column: span 2; grid-row: span 1; }
-    }
-
-    .showcase-item {
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      min-height: 180px;
-    }
-
-    .showcase-main { grid-row: span 2; }
-
-    .showcase-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s var(--ease-out);
-    }
-
-    .showcase-item:hover img { transform: scale(1.05); }
-
-    .showcase-item::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 40%, rgba(26,46,36,0.75) 100%);
-    }
-
-    .showcase-cap {
-      position: absolute;
-      bottom: 0.85rem;
-      left: 0.85rem;
-      right: 0.85rem;
-      z-index: 1;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .showcase-main .showcase-cap { font-size: 1rem; font-family: var(--font-display); }
-
-    .showcase-item.img-missing {
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      min-height: 180px;
-    }
-    .showcase-item.img-missing::after { display: none; }
-
-    .visual-band {
-      position: relative;
-      min-height: 320px;
-      display: flex;
-      align-items: center;
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
-
-    @media (max-width: 768px) {
-      .visual-band { background-attachment: scroll; min-height: 260px; }
-    }
-
-    .visual-band-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(248,250,248,0.92) 0%, rgba(248,250,248,0.55) 100%);
-    }
-
-    .visual-band-inner {
-      position: relative;
-      z-index: 1;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 3rem clamp(1.25rem, 4vw, 3rem);
-      width: 100%;
-    }
-
-    .visual-band-card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-lg);
-      padding: 2rem 2.25rem;
-      max-width: 36rem;
-      box-shadow: var(--shadow-md);
-    }
-
-    .chart-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .chart-y-label {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: rotate(-90deg) translateX(-50%);
-      transform-origin: left center;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      white-space: nowrap;
-    }
-
-    .chart-legend {
-      display: flex;
-      gap: 1.25rem;
-      margin-top: 0.75rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .chart-legend span::before {
-      content: '';
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin-right: 0.35rem;
-      border-radius: 2px;
-      vertical-align: middle;
-    }
-
-    .legend-bond::before { background: var(--accent); }
-    .legend-fund::before { background: var(--success); }
-
-    .big-toggle-row .toggle-btns button {
-      padding: 0.65rem 1.1rem;
-      font-size: 0.85rem;
-    }
-
-    .plain-box {
-      padding: 1.25rem 1.35rem;
-      background: linear-gradient(90deg, var(--accent-soft), transparent);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-sm);
-      border-left: 3px solid var(--accent);
-      font-size: 0.95rem;
-      line-height: 1.55;
-      margin-bottom: 1.25rem;
-      color: var(--text);
-    }
-
-    /* Simple chart (HTML — easy to read) */
-    .simple-viz {
-      background: linear-gradient(165deg, #fff 0%, #f4faf6 100%);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-md);
-      padding: 2rem;
-      margin-top: 1.25rem;
-      box-shadow: var(--shadow-xs);
-    }
-
-    .simple-viz-headline {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.35rem;
-    }
-
-    .simple-big {
-      font-size: clamp(2.5rem, 8vw, 3.75rem);
-      font-weight: 700;
-      color: var(--accent);
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .simple-big span.unit {
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-left: 0.25rem;
-    }
-
-    .simple-sub {
-      font-size: 1rem;
-      color: var(--text-muted);
-      margin-top: 0.75rem;
-      line-height: 1.5;
-    }
-
-    .simple-bars {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 6px;
-      height: 160px;
-      margin-top: 1.5rem;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--accent-border);
-    }
-
-    .simple-bar-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100%;
-      justify-content: flex-end;
-      max-width: 48px;
-    }
-
-    .simple-bar {
-      width: 100%;
-      background: linear-gradient(180deg, var(--accent-light), var(--accent));
-      border-radius: 6px 6px 0 0;
-      min-height: 8px;
-      transition: height 0.4s var(--ease-out);
-    }
-
-    .simple-bar-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 0.4rem;
-      font-weight: 600;
-    }
-
-    .simple-bar-value {
-      font-size: 0.65rem;
-      color: var(--accent);
-      margin-bottom: 0.25rem;
-      font-weight: 600;
-    }
-
-    .fund-zero {
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-
-    .fund-zero .simple-big { color: var(--accent); }
-
-    .img-fallback {
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      min-height: 120px;
-    }
-
-    .toggle-btns button.active {
-      background: var(--bg-elevated);
-      color: var(--accent);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .visual-band-overlay {
-      background: linear-gradient(90deg, rgba(248,250,248,0.92) 0%, rgba(248,250,248,0.6) 100%);
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: center;
-      margin-top: 1.5rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.8rem 1.65rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      text-decoration: none;
-      border-radius: var(--radius-full);
-      transition: transform 0.25s var(--ease-out), box-shadow 0.25s, background 0.25s, border-color 0.25s;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      box-shadow: 0 4px 16px var(--accent-glow);
-    }
-
-    .btn-primary:hover {
-      background: #0a5a34;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px var(--accent-glow);
-    }
-
-    .btn-ghost {
-      background: #fff;
-      color: var(--text);
-      border: 1px solid var(--accent-border);
-      box-shadow: var(--shadow-xs);
-    }
-
-    .btn-ghost:hover {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      transform: translateY(-1px);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-eyebrow {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.28em;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 7vw, 3.75rem);
-      font-weight: 600;
-      line-height: 1.08;
-      margin-bottom: 1rem;
-      letter-spacing: -0.03em;
-    }
-
-    .hero-sub {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      font-weight: 300;
-      color: var(--cream-muted);
-      max-width: 32rem;
-      margin: 0 auto 2rem;
-    }
-
-    .hero-stat {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1.15rem 2.25rem;
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-md);
-    }
-
-    .hero-stat-value {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-    }
-
-    .hero-stat-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--cream-muted);
-      margin-top: 0.35rem;
-    }
-
-    /* ——— Service sections ——— */
-    .purpose-band {
-      background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg) 100%);
-      border-top: 1px solid var(--accent-border);
-      border-bottom: 1px solid var(--accent-border);
-    }
-
-    .purpose-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 2.5rem clamp(1.25rem, 4vw, 3rem);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    @media (max-width: 768px) {
-      .purpose-inner { grid-template-columns: 1fr; }
-    }
-
-    .question-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      .question-grid { grid-template-columns: 1fr; }
-    }
-
-    .question-card {
-      padding: 1.5rem;
-      background: var(--bg-elevated);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-xs);
-      transition: box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out), border-color 0.35s;
-    }
-
-    .question-card:hover {
-      border-color: rgba(13, 107, 63, 0.25);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
-    }
-
-    .question-card .q {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      margin-bottom: 0.5rem;
-      line-height: 1.35;
-    }
-
-    .question-card .a {
-      font-size: 0.88rem;
-      color: var(--cream-muted);
-      line-height: 1.5;
-    }
-
-    .steps-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      .steps-row { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 500px) {
-      .steps-row { grid-template-columns: 1fr; }
-    }
-
-    .step-card {
-      padding: 1.35rem;
-      background: var(--bg-elevated);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-xs);
-      border-left: 3px solid var(--accent);
-      transition: box-shadow 0.3s, transform 0.3s;
-    }
-
-    .step-card:hover {
-      box-shadow: var(--shadow-sm);
-      transform: translateY(-2px);
-    }
-
-    .step-num {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.15em;
-      margin-bottom: 0.35rem;
-    }
-
-    .step-card h4 {
-      font-size: 0.92rem;
-      font-weight: 600;
-      margin-bottom: 0.35rem;
-    }
-
-    .step-card p {
-      font-size: 0.82rem;
-      color: var(--cream-muted);
-      line-height: 1.45;
-    }
-
-    /* Tax comparison bars */
-    .tax-compare,
-    #taxCompareBlock {
-      margin-top: 2rem;
-      padding: 1.75rem;
-      background: var(--bg-muted);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--accent-border);
-    }
-
-    #taxCompareBlock h3 {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .tax-compare h3 {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .tax-compare-sub {
-      font-size: 0.88rem;
-      color: var(--cream-muted);
-      margin-bottom: 1.75rem;
-    }
-
-    .tax-bar-row {
-      margin-bottom: 1.25rem;
-    }
-
-    .tax-bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .tax-bar-label strong { color: var(--cream); font-variant-numeric: tabular-nums; }
-
-    .tax-bar-track {
-      height: 40px;
-      background: #fff;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      display: flex;
-      border: 1px solid var(--accent-border);
-      box-shadow: inset 0 1px 3px rgba(12, 26, 20, 0.04);
-    }
-
-    .tax-bar-fill {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 0.65rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      transition: width 0.5s var(--ease-out);
-      min-width: 0;
-    }
-
-    .tax-bar-fill.base { background: #dce8e0; color: var(--text-muted); }
-    .tax-bar-fill.add { background: linear-gradient(90deg, #86c99a, var(--accent)); color: #fff; }
-
-    .context-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-top: 1.5rem;
-    }
-
-    .context-pill {
-      padding: 0.5rem 1rem;
-      background: var(--accent-soft);
-      border: 1px solid var(--accent-border);
-      border-radius: 100px;
-      font-size: 0.82rem;
-    }
-
-    .context-pill span { color: var(--accent); font-weight: 700; }
-
-    /* Project comparison table */
-    .compare-table-wrap {
-      overflow-x: auto;
-      margin-top: 1.5rem;
-      border: 1px solid rgba(245, 240, 232, 0.1);
-      border-radius: 10px;
-    }
-
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    .compare-table th,
-    .compare-table td {
-      padding: 1rem 1.15rem;
-      text-align: left;
-      border-bottom: 1px solid rgba(245, 240, 232, 0.08);
-    }
-
-    .compare-table th {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--cream-muted);
-      font-weight: 600;
-      background: rgba(0,0,0,0.2);
-    }
-
-    .compare-table tr:last-child td { border-bottom: none; }
-
-    .compare-table .impact-cell {
-      font-weight: 700;
-      color: var(--gold);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .compare-table tr.pending-row { opacity: 0.55; }
-
-    .status-pill {
-      display: inline-block;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      font-weight: 600;
-    }
-
-    .status-pill.live { background: var(--success-dim); color: var(--success); }
-    .status-pill.pending { background: rgba(245,240,232,0.08); color: var(--cream-muted); }
-
-    /* Service cards row */
-    .service-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 768px) {
-      .service-row { grid-template-columns: 1fr; }
-    }
-
-    .service-card {
-      padding: 1.65rem;
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-md);
-      background: var(--bg-elevated);
-      box-shadow: var(--shadow-xs);
-      transition: box-shadow 0.35s, transform 0.35s;
-    }
-
-    .service-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-
-    .service-card h4 {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .service-card p {
-      font-size: 0.9rem;
-      color: var(--cream-muted);
-      line-height: 1.5;
-    }
-
-    .service-card a { color: var(--accent); }
-
-    /* Collapsible visuals */
-    .visuals-toggle {
-      width: 100%;
-      margin-top: 2rem;
-      padding: 1rem 1.25rem;
-      background: transparent;
-      border: 1px solid rgba(245, 240, 232, 0.15);
-      border-radius: 8px;
-      color: var(--cream-muted);
-      font-family: inherit;
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-align: left;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .visuals-toggle:hover { border-color: var(--accent-hover); color: var(--cream); }
-
-    .visuals-panel {
-      display: none;
-      padding-top: 1rem;
-    }
-
-    .visuals-panel.open { display: block; }
-
-    .visuals-thumb-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    @media (max-width: 600px) {
-      .visuals-thumb-row { grid-template-columns: 1fr 1fr; }
-    }
-
-    .visuals-thumb-row img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 6px;
-      cursor: pointer;
-      opacity: 0.85;
-      transition: opacity 0.2s;
-    }
-
-    .visuals-thumb-row img:hover { opacity: 1; }
-
-    /* Project comparison hub (centerpiece) */
-    .project-hub {
-      background: var(--navy-mid);
-      border-bottom: 1px solid rgba(245, 240, 232, 0.08);
-    }
-
-    .project-hub-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 3rem;
-    }
-
-    .project-hub-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-      margin-top: 1.75rem;
-    }
-
-    @media (max-width: 900px) {
-      .project-hub-grid { grid-template-columns: 1fr; }
-    }
-
-    .hub-card {
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(245, 240, 232, 0.12);
-      background: var(--navy);
-      transition: border-color 0.3s, transform 0.3s;
-      cursor: pointer;
-    }
-
-    .hub-card:hover { border-color: var(--accent-hover); transform: translateY(-3px); }
-    .hub-card.active { border-color: var(--accent); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
-    .hub-card.pending-card { cursor: default; opacity: 0.88; }
-    .hub-card.pending-card:hover { transform: none; }
-
-    .hub-card-img {
-      height: 160px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-
-    .hub-card-img::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9) 100%);
-    }
-
-    .hub-card-body { padding: 1.25rem; }
-
-    .hub-card-body h3 {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      line-height: 1.3;
-    }
-
-    .hub-metrics {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin-top: 0.75rem;
-    }
-
-    .hub-metric {
-      padding: 0.5rem 0.6rem;
-      background: rgba(0,0,0,0.25);
-      border-radius: 6px;
-      font-size: 0.78rem;
-    }
-
-    .hub-metric .val {
-      display: block;
-      font-weight: 700;
-      color: var(--gold);
-      font-size: 0.95rem;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .hub-metric .lbl { color: var(--cream-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; }
-
-    .hub-bond-row {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.75rem;
-      font-size: 0.75rem;
-    }
-
-    .hub-bond-pill {
-      flex: 1;
-      padding: 0.45rem;
-      border-radius: 6px;
-      text-align: center;
-    }
-
-    .hub-bond-pill.bond-p { background: rgba(255,255,255,0.08); border: 1px solid var(--accent-border); }
-    .hub-bond-pill.fund-p { background: var(--success-dim); border: 1px solid rgba(134, 239, 172, 0.25); }
-
-    .photo-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 2rem;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    @media (max-width: 600px) {
-      .photo-strip { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .photo-strip img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      cursor: pointer;
-      opacity: 0.9;
-      transition: opacity 0.2s;
-    }
-
-    .photo-strip img:hover { opacity: 1; }
-
-    .personalize-wrap {
-      margin-top: 2.5rem;
-      border: 1px solid rgba(245, 240, 232, 0.12);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .personalize-toggle {
-      width: 100%;
-      padding: 1.1rem 1.35rem;
-      background: var(--accent-soft);
-      border: none;
-      color: var(--cream);
-      font-family: inherit;
-      font-size: 0.9rem;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .personalize-toggle span.sub { font-size: 0.8rem; color: var(--cream-muted); font-weight: 400; display: block; margin-top: 0.2rem; }
-
-    .personalize-panel {
-      display: none;
-      padding: 1.5rem 1.35rem;
-      border-top: 1px solid rgba(245, 240, 232, 0.08);
-    }
-
-    .personalize-panel.open { display: block; }
-
-    .not-prediction {
-      padding: 0.85rem 1rem;
-      background: var(--accent-soft);
-      border-left: 3px solid var(--accent);
-      font-size: 0.85rem;
-      color: var(--cream-muted);
-      margin-bottom: 1.25rem;
-      line-height: 1.5;
-    }
-
-    .past-note {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: rgba(245, 240, 232, 0.04);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: var(--cream-muted);
-      line-height: 1.5;
-    }
-
-    /* ——— Sections ——— */
-    section { position: relative; }
-
-    .section-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: clamp(4rem, 10vh, 7rem) clamp(1.25rem, 4vw, 3rem);
-    }
-
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 0.85rem;
-    }
-
-    .section-label::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.75rem, 4vw, 2.75rem);
-      font-weight: 600;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-
-    .section-desc {
-      color: var(--cream-muted);
-      font-size: 1.05rem;
-      max-width: 36rem;
-      font-weight: 300;
-    }
-
-    /* Reveal animations */
-    .reveal {
-      opacity: 0;
-      transform: translateY(48px);
-      transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-
-    /* ——— Project selector (Tesla product tabs) ——— */
-    .projects-strip {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      border-bottom: 1px solid rgba(245, 240, 232, 0.12);
-      background: var(--navy);
-      position: sticky;
-      top: var(--nav-h);
-      z-index: 100;
-    }
-
-    .project-tab {
-      flex: 1;
-      max-width: 280px;
-      padding: 1.1rem 1rem;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--cream-muted);
-      cursor: pointer;
-      font-family: inherit;
-      text-align: center;
-      transition: color 0.3s, border-color 0.3s, background 0.3s;
-    }
-
-    .project-tab:hover { color: var(--cream); background: rgba(255,255,255,0.03); }
-
-    .project-tab.active {
-      color: var(--cream);
-      border-bottom-color: var(--accent);
-    }
-
-    .project-tab .tab-name {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.2rem;
-    }
-
-    .project-tab .tab-meta {
-      font-size: 0.72rem;
-      opacity: 0.7;
-    }
-
-    .project-tab.pending { cursor: default; opacity: 0.55; }
-    .project-tab.pending.active { opacity: 0.75; }
-
-    /* ——— Full-bleed image + text split ——— */
-    .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 70vh;
-    }
-
-    @media (max-width: 900px) {
-      .split { grid-template-columns: 1fr; min-height: auto; }
-    }
-
-    .split-media {
-      position: relative;
-      overflow: hidden;
-      min-height: 360px;
-    }
-
-    .split-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1.05);
-      transition: transform 8s var(--ease);
-    }
-
-    .split.visible .split-media img { transform: scale(1); }
-
-    .split-media::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent 40%, var(--navy) 100%);
-    }
-
-    @media (max-width: 900px) {
-      .split-media::after {
-        background: linear-gradient(180deg, transparent 30%, var(--navy) 100%);
-      }
-    }
-
-    .split-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: clamp(2rem, 5vw, 4rem);
-      background: var(--navy);
-    }
-
-    .feature-list {
-      list-style: none;
-      margin-top: 1.5rem;
-    }
-
-    .feature-list li {
-      padding: 0.65rem 0;
-      border-bottom: 1px solid rgba(245, 240, 232, 0.08);
-      font-size: 0.92rem;
-      color: var(--cream-muted);
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .feature-list li::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      margin-top: 0.5rem;
-      flex-shrink: 0;
-    }
-
-    /* ——— Calculator (sticky Tesla-style panel) ——— */
-    .calc-section {
-      background: var(--bg);
-    }
-
-    .calc-hero-number {
-      font-size: clamp(3.5rem, 12vw, 7rem);
-      font-weight: 700;
-      color: var(--gold);
-      font-variant-numeric: tabular-nums;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      transition: color 0.3s;
-    }
-
-    .calc-hero-label {
-      font-size: 1rem;
-      color: var(--cream-muted);
-      margin-top: 0.5rem;
-      font-weight: 300;
-    }
-
-    .calc-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 3rem;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .calc-grid { grid-template-columns: 1fr; }
-    }
-
-    .slider-block {
-      padding: 2rem;
-      background: var(--bg-muted);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--accent-border);
-    }
-
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .slider-header h3 {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 600;
-    }
-
-    .av-big {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--gold);
-      font-variant-numeric: tabular-nums;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      height: 4px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: var(--accent-border);
-      border-radius: 2px;
-      outline: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: grab;
-      box-shadow: 0 4px 12px rgba(21, 128, 61, 0.25);
-      border: 3px solid #fff;
-      transition: transform 0.2s;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
-
-    input[type="range"]::-moz-range-thumb {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--accent);
-      cursor: grab;
-      border: 3px solid #fff;
-    }
-
-    .av-input-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .av-input-row input[type="number"] {
-      width: 130px;
-      padding: 0.5rem 0.75rem;
-      background: #fff;
-      border: 1px solid var(--accent-border);
-      border-radius: 4px;
-      color: var(--text);
-      font-size: 1rem;
-      font-family: inherit;
-    }
-
-  .av-input-row input:focus { outline: none; border-color: var(--accent); }
-
-    /* Comparison cards */
-    .compare-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    @media (max-width: 600px) {
-      .compare-grid { grid-template-columns: 1fr; }
-    }
-
-    .compare-panel {
-      padding: 1.85rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--accent-border);
-      background: var(--bg-elevated);
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
-    }
-
-    .compare-panel:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-
-    .compare-panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.6s var(--ease-out);
-    }
-
-    .compare-panel.visible::before { transform: scaleX(1); }
-
-    .compare-panel.bond { background: linear-gradient(160deg, var(--accent-soft), transparent); }
-    .compare-panel.fund { background: linear-gradient(160deg, var(--success-dim), transparent); }
-    .compare-panel.fund::before { background: var(--success); }
-
-    .compare-panel h4 {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--cream-muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .compare-amount {
-      font-size: clamp(2rem, 5vw, 2.75rem);
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-    }
-
-    .compare-panel.bond .compare-amount { color: var(--gold); }
-    .compare-panel.fund .compare-amount { color: var(--success); }
-
-    .compare-detail {
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      color: var(--cream-muted);
-      line-height: 1.55;
-    }
-
-    /* Stats ticker */
-    .stats-ticker {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      background: var(--accent-border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      margin-top: 3rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    @media (max-width: 768px) {
-      .stats-ticker { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .stat-cell {
-      background: var(--bg-elevated);
-      padding: 1.75rem 1.25rem;
-      text-align: center;
-      transition: background 0.25s;
-    }
-
-    .stat-cell:hover { background: var(--accent-soft); }
-
-    .stat-cell .val {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--gold);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .stat-cell .lbl {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--cream-muted);
-      margin-top: 0.35rem;
-      line-height: 1.3;
-    }
-
-    /* Gallery */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: 280px 200px;
-      gap: 4px;
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      .gallery {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 200px 200px 200px;
-      }
-    }
-
-    .gallery-item {
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-    .gallery-item:first-child {
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.7s var(--ease-out), filter 0.5s;
-      filter: brightness(0.85);
-    }
-
-    .gallery-item:hover img {
-      transform: scale(1.06);
-      filter: brightness(1);
-    }
-
-    .gallery-caption {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 1rem;
-      background: linear-gradient(transparent, rgba(0,0,0,0.92));
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      transform: translateY(100%);
-      transition: transform 0.4s var(--ease-out);
-    }
-
-    .gallery-item:hover .gallery-caption { transform: translateY(0); }
-
-    /* Funding bars */
-    .funding-list { list-style: none; margin-top: 1.5rem; }
-
-    .funding-item { margin-bottom: 1rem; }
-
-    .funding-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.88rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .funding-bar {
-      height: 8px;
-      background: var(--bg-muted);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-      border: 1px solid var(--accent-border);
-    }
-
-    .funding-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #4ade80, var(--accent));
-      border-radius: var(--radius-full);
-      width: 0;
-      transition: width 1.2s var(--ease-out);
-    }
-
-    /* Pending project */
-    .pending-hero {
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .pending-hero .bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      filter: brightness(0.35) saturate(0.7);
-    }
-
-    .pending-hero .content {
-      position: relative;
-      z-index: 1;
-      padding: 2rem;
-    }
-
-    .pending-badge {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      border: 1px solid rgba(245, 240, 232, 0.3);
-      border-radius: 100px;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      margin-bottom: 1.5rem;
-    }
-
-    /* Total impact — full width CTA band */
-    .total-band {
-      background: linear-gradient(135deg, #0a5a34 0%, #0d6b3f 40%, #128848 100%);
-      border: none;
-      padding: clamp(3.5rem, 9vh, 5.5rem) clamp(1.25rem, 4vw, 3rem);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .total-band::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.12), transparent 45%),
-        radial-gradient(circle at 80% 80%, rgba(0,0,0,0.08), transparent 40%);
-      pointer-events: none;
-    }
-
-    .total-band .section-label { color: rgba(255,255,255,0.75); }
-    .total-band .section-label::before { background: rgba(255,255,255,0.9); box-shadow: 0 0 0 3px rgba(255,255,255,0.2); }
-    .total-band .section-title { color: #fff; }
-    .total-band .section-desc { color: rgba(255,255,255,0.82); }
-    .total-band .total-sub { color: rgba(255,255,255,0.7) !important; }
-
-    .total-band-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-
-    .total-big {
-      font-size: clamp(3rem, 10vw, 5.5rem);
-      font-weight: 700;
-      color: #fff;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-      letter-spacing: -0.03em;
-      text-shadow: 0 4px 24px rgba(0,0,0,0.15);
-    }
-
-    .total-band-inner { position: relative; z-index: 1; }
-
-    .total-items {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      font-size: 0.95rem;
-      color: var(--cream-muted);
-    }
-
-    .total-items .pending-line { opacity: 0.4; font-style: italic; }
-
-    /* Tooltips */
-    .term {
-      border-bottom: 1px dotted var(--text-dim);
-      cursor: help;
-      position: relative;
-    }
-
-    .term::after {
-      content: attr(data-tip);
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: max-content;
-      max-width: 240px;
-      padding: 0.55rem 0.8rem;
-      background: #262626;
-      border: 1px solid var(--accent-border);
-      border-radius: 6px;
-      font-size: 0.75rem;
-      line-height: 1.4;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s, visibility 0.2s;
-      pointer-events: none;
-      z-index: 50;
-      font-weight: 400;
-      text-align: center;
-    }
-
-    .term:hover::after, .term:focus::after {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .source-line {
-      margin-top: 2rem;
-      padding-left: 1rem;
-      border-left: 2px solid var(--accent);
-      font-size: 0.82rem;
-      color: var(--cream-muted);
-    }
-
-    .disclaimer {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 2rem clamp(1.25rem, 4vw, 3rem);
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--cream-muted);
-      line-height: 1.6;
-    }
-
-    .disclaimer a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-
-    footer {
-      text-align: center;
-      padding: 2.5rem 1.5rem 3.5rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--accent-border);
-      background: var(--bg-elevated);
-    }
-
-    .img-attribution {
-      font-size: 0.68rem;
-      color: rgba(245, 240, 232, 0.35);
-      margin-top: 0.75rem;
-    }
-
-    .hidden { display: none !important; }
-
-    /* Lightbox */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(0, 0, 0, 0.94);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.35s, visibility 0.35s;
-    }
-
-    .lightbox.open { opacity: 1; visibility: visible; }
-
-    .lightbox img {
-      max-width: 100%;
-      max-height: 90vh;
-      object-fit: contain;
-      border-radius: 4px;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 1.5rem;
-      right: 2rem;
-      background: none;
-      border: none;
-      color: var(--cream);
-      font-size: 2rem;
-      cursor: pointer;
-      opacity: 0.7;
-    }
-
-    .lightbox-close:hover { opacity: 1; }
-
-    /* Interactive toggles & chart */
-    .explorer-panel {
-      margin-top: 2.5rem;
-      padding: clamp(1.5rem, 4vw, 2.25rem);
-      background: var(--bg-elevated);
-      border: 1px solid var(--accent-border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-    }
-
-    .toggle-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem 1.5rem;
-      margin-bottom: 1.5rem;
-      align-items: flex-start;
-    }
-
-    .toggle-group label {
-      display: block;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--text-muted);
-      margin-bottom: 0.4rem;
-    }
-
-    .toggle-btns {
-      display: inline-flex;
-      padding: 4px;
-      gap: 2px;
-      border-radius: var(--radius-full);
-      background: var(--bg-muted);
-      border: 1px solid var(--accent-border);
-    }
-
-    .toggle-btns button {
-      padding: 0.55rem 1rem;
-      font-size: 0.78rem;
-      font-weight: 600;
-      font-family: inherit;
-      border: none;
-      border-radius: var(--radius-full);
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    }
-
-    .toggle-btns button:hover { color: var(--text); }
-
-    .chart-caption {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-top: 1rem;
-      line-height: 1.5;
-    }
-
-    .chart-stat-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 1.25rem;
-    }
-
-    @media (max-width: 600px) {
-      .chart-stat-row { grid-template-columns: 1fr; }
-    }
-
-    .chart-stat {
-      padding: 1.15rem;
-      background: var(--bg-elevated);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--accent-border);
-      box-shadow: var(--shadow-xs);
-      text-align: center;
-    }
-
-    .chart-stat .num {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .chart-stat .lbl { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; }
-
-    .sustain-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-
-    @media (max-width: 700px) {
-      .sustain-grid { grid-template-columns: 1fr; }
-    }
-
-    .sustain-card {
-      padding: 1.35rem;
-      background: var(--bg-elevated);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--accent-border);
-      box-shadow: var(--shadow-xs);
-      transition: box-shadow 0.3s, transform 0.3s;
-    }
-
-    .sustain-card:hover {
-      box-shadow: var(--shadow-sm);
-      transform: translateY(-2px);
-    }
-
-    .sustain-card h4 { font-family: var(--font-display); font-weight: 600; }
-
-    .sustain-card h4 {
-      font-size: 0.95rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .sustain-card p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-
-    .av-callout {
-      padding: 1rem 1.15rem;
-      background: var(--accent-soft);
-      border-radius: 8px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-      margin-bottom: 1.25rem;
-      border: 1px solid var(--accent-border);
-    }
-
-    .av-callout strong { color: var(--text); }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-      .hero-bg { animation: none; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCS Decision Tool v3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* ---------- Streamlit-flavored tokens ---------- */
+  :root{
+    --bg:#ffffff; --side:#f0f2f6; --ink:#31333f; --ink-2:#555867; --ink-3:#808495;
+    --line:#e6e8ee; --primary:#ff4b4b;
+    --blue:#0068c9; --blue-2:#83c9ff; --teal:#29b09d; --gold:#ffd16a;
+    --green:#09ab3b; --green-bg:#ecfaf1; --red:#ff2b2b; --red-bg:#ffecec;
+    --amber-bg:#fff8e1; --amber-bd:#ffe082; --blue-bg:#e8f2fc;
+    --mono:"Source Code Pro",Consolas,monospace;
+    --sans:"Source Sans Pro","Segoe UI",-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5}
+  .app{display:flex;min-height:100vh}
+
+  /* ---------- Sidebar (st.sidebar) ---------- */
+  .sidebar{width:330px;flex-shrink:0;background:var(--side);padding:24px 20px 60px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sidebar h1{font-size:19px;font-weight:700;margin-bottom:2px}
+  .vtag{display:inline-block;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:9px;margin-left:6px;vertical-align:3px}
+  .sidebar .cap{font-size:12.5px;color:var(--ink-3);margin-bottom:22px}
+  .ctl{margin-bottom:20px}
+  .ctl .lab{display:flex;align-items:center;font-size:14px;font-weight:600;margin-bottom:6px}
+  .ctl .lab .val{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--ink-2);font-weight:400}
+  input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer;height:20px}
+  .radios label{display:flex;align-items:center;gap:8px;font-size:14px;padding:4px 0;cursor:pointer}
+  .radios input{accent-color:var(--primary);width:16px;height:16px;cursor:pointer}
+  .side-foot{font-size:11.5px;color:var(--ink-3);border-top:1px solid #dfe2e9;padding-top:12px;line-height:1.5}
+
+  /* ---------- Tooltips (the "?" next to every label) ---------- */
+  .tip{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;
+       background:#c3c8d1;color:#fff;font-size:10px;font-weight:700;cursor:help;margin-left:7px;position:relative;flex-shrink:0}
+  .tip::after{content:attr(data-tip);position:absolute;bottom:135%;left:50%;transform:translateX(-50%);
+       background:#31333f;color:#fff;padding:9px 11px;border-radius:6px;font-size:12.5px;font-weight:400;
+       width:240px;line-height:1.45;text-align:left;z-index:50;opacity:0;pointer-events:none;transition:opacity .12s}
+  .tip:hover::after,.tip:focus::after{opacity:1}
+  .sidebar .tip::after{left:auto;right:-10px;transform:none}
+
+  /* ---------- Main ---------- */
+  .main{flex:1;padding:34px 44px 70px;max-width:1060px}
+  .main h1{font-size:27px;font-weight:700;letter-spacing:-.01em}
+  .main .sub{color:var(--ink-3);font-size:15px;margin:4px 0 20px}
+  h2{font-size:19px;margin:26px 0 10px}
+  h3.tbl{font-size:16px;margin:20px 0 6px}
+  p{margin-bottom:8px}
+  .small{font-size:13px;color:var(--ink-3)}
+
+  /* st.expander */
+  details.exp{border:1px solid var(--line);border-radius:8px;margin:10px 0;background:#fff}
+  details.exp summary{cursor:pointer;padding:11px 14px;font-size:14.5px;font-weight:600;list-style:none;display:flex;align-items:center}
+  details.exp summary::before{content:"\25B8";margin-right:9px;color:var(--ink-3);transition:transform .15s}
+  details.exp[open] summary::before{transform:rotate(90deg)}
+  details.exp .body{padding:2px 16px 14px;font-size:14px;color:var(--ink-2)}
+  details.exp .body p{margin-bottom:9px}
+
+  /* st.metric */
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:16px 0 6px}
+  .metric{padding:2px 4px}
+  .metric .k{font-size:13.5px;color:var(--ink-2);display:flex;align-items:center}
+  .metric .v{font-size:29px;font-weight:600;letter-spacing:-.01em;margin:1px 0}
+  .metric .d{font-size:13px;font-weight:600}
+  .metric .d.up{color:var(--green)} .metric .d.down{color:var(--red)} .metric .d.flat{color:var(--ink-3);font-weight:400}
+
+  /* st.success / st.info / st.warning / st.error */
+  .alert{border-radius:8px;padding:13px 16px;margin:12px 0;font-size:14.5px;display:flex;gap:10px;align-items:flex-start}
+  .alert .tag{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:9px;margin-top:2px;flex-shrink:0}
+  .alert.success{background:var(--green-bg);color:#0c5a27}
+  .alert.success .tag{background:var(--green);color:#fff}
+  .alert.info{background:var(--blue-bg);color:#0d4d8c}
+  .alert.info .tag{background:var(--blue);color:#fff}
+  .alert.warning{background:var(--amber-bg);color:#7a5b00}
+  .alert.warning .tag{background:#c79a00;color:#fff}
+  .alert.error{background:var(--red-bg);color:#8c1c13}
+  .alert.error .tag{background:var(--red);color:#fff}
+  .alert strong{display:block;margin-bottom:2px}
+
+  /* st.tabs */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:22px 0 0;overflow-x:auto}
+  .tabs button{background:none;border:none;font:inherit;font-size:14.5px;font-weight:600;color:var(--ink-3);
+    padding:9px 14px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+  .tabs button.active{color:var(--primary);border-bottom-color:var(--primary)}
+  .tabs button:hover{color:var(--ink)}
+  .tabpane{display:none;padding-top:16px}
+  .tabpane.show{display:block}
+
+  .chart-box{border:1px solid var(--line);border-radius:8px;padding:16px;margin:10px 0;background:#fff}
+  .chart-box .cap{font-size:13px;color:var(--ink-3);margin-top:8px;line-height:1.45}
+
+  table.data{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+  table.data th{text-align:left;padding:8px 10px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);border-bottom:2px solid var(--line)}
+  table.data td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.data td.mono{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+  td.pass{color:var(--green);font-weight:700} td.fail{color:var(--red);font-weight:700}
+
+  .routes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+  .route{border:1px solid var(--line);border-radius:8px;padding:14px 16px;position:relative}
+  .route.winner{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+  .route .tag{position:absolute;top:-10px;right:12px;background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:11px}
+  .route h3{font-size:15px;margin-bottom:8px}
+  .route table{width:100%;font-size:13.5px;border-collapse:collapse}
+  .route td{padding:4px 0;border-bottom:1px dashed var(--line)}
+  .route td:last-child{text-align:right;font-family:var(--mono);font-size:13px}
+  .route .total td{font-weight:700;border-bottom:none;padding-top:8px}
+
+  .badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:9px}
+  .badge.exact{background:var(--green-bg);color:var(--green)}
+  .badge.readoff{background:var(--blue-bg);color:var(--blue)}
+  .badge.fitted{background:#eef0fb;color:#4a5ac6}
+  .badge.estimate{background:var(--amber-bg);color:#8a6400}
+  .badge.single{background:#f3ecfa;color:#7b3fb3}
+  .badge.stale{background:var(--red-bg);color:#a33}
+  .qa-big{font-family:var(--mono);font-size:17px;font-weight:700;padding:10px 16px;border-radius:8px;display:inline-block;margin:6px 0}
+  .qa-big.allpass{background:var(--green-bg);color:var(--green)}
+  .qa-big.somefail{background:var(--red-bg);color:var(--red)}
+
+  dl.gloss dt{font-weight:700;margin-top:9px;font-size:14px}
+  dl.gloss dd{color:var(--ink-2);font-size:13.5px}
+  ul.plain{margin:6px 0 0 20px}
+  ul.plain li{margin-bottom:7px;font-size:13.5px;color:var(--ink-2)}
+
+  @media(max-width:900px){
+    .app{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:static}
+    .sidebar .tip::after{left:0;right:auto}
+    .routes{grid-template-columns:1fr}
+    .main{padding:22px 16px}
+  }
+  :focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+</style>
 </head>
 <body>
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<div class="app">
 
-  <nav class="nav" id="mainNav">
-    <a href="#" class="nav-brand">STEWARD</a>
-    <ul class="nav-links">
-      <li><a href="#purpose">About</a></li>
-      <li><a href="#explorer">Explore</a></li>
-      <li><a href="#funding">Funding</a></li>
-      <li><a href="#help">Help</a></li>
-    </ul>
-    <a href="#explorer" class="nav-cta">See the numbers</a>
-  </nav>
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" aria-label="Inputs">
+  <h1>Your data center<span class="vtag">v3</span></h1>
+  <div class="cap">Move any control — everything updates instantly.</div>
 
-  <!-- Hero -->
-  <header class="hero" id="top">
-    <div class="hero-bg" id="heroBg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-panel">
-        <p class="hero-eyebrow">North Castle, NY · Free public tool</p>
-        <h1>What will the new<br>Town Hall cost you?</h1>
-        <p class="hero-plain">
-          <strong>STEWARD</strong> is a simple dashboard for homeowners. The town is planning a big rebuild on Bedford Road — new Town Hall, police, courts, parks, and more.
-          We show the <strong>real dollar amounts</strong> from the Finance Department so you can understand it before any vote.
-        </p>
-        <div class="intro-pills">
-          <span class="intro-pill">No login</span>
-          <span class="intro-pill">Official town data</span>
-          <span class="intro-pill">Slide to try your home</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-value">~$364</span>
-          <span class="hero-stat-label">per year · typical home · if the town borrows</span>
-        </div>
-        <div class="hero-actions">
-          <a href="#explorer" class="btn btn-primary">Explore your cost</a>
-          <a href="#showcase" class="btn btn-ghost">View the plans</a>
-        </div>
-      </div>
-    </div>
-    <div class="scroll-cue" aria-hidden="true">Scroll</div>
-  </header>
-
-  <section class="showcase" id="showcase">
-    <div class="section-inner" style="padding:2.5rem 1.25rem 1rem">
-      <p class="section-label">The project</p>
-      <h2 class="section-title" style="font-size:1.75rem">What’s being built on Bedford Road</h2>
-      <p class="section-desc" style="margin-bottom:1.25rem">Tap any image to enlarge. These are official renderings from the November 2025 proposal.</p>
-    </div>
-    <div class="showcase-frame">
-      <div class="showcase-grid reveal" id="showcaseGrid"></div>
-    </div>
-  </section>
-
-  <section class="purpose-band" id="purpose">
-    <div class="purpose-inner reveal">
-      <div>
-        <p class="section-label">Start here</p>
-        <h2 class="section-title" style="font-size:1.75rem">Never heard of this? You’re in the right place.</h2>
-        <p class="section-desc">You don’t need to be an expert. STEWARD answers three simple questions using numbers the town already verified.</p>
-      </div>
-      <div class="steps-row" id="howToSteps"></div>
-    </div>
-  </section>
-
-  <section class="section-inner" style="padding-top:2rem;padding-bottom:2rem">
-    <div class="reveal">
-      <p class="section-label">Quick answers</p>
-      <h2 class="section-title" style="font-size:1.75rem">Plain English</h2>
-    </div>
-    <div class="question-grid reveal reveal-delay-1" id="residentQuestions"></div>
-  </section>
-
-  <main id="mainContent"></main>
-
-  <!-- Help / contact -->
-  <section class="section-inner" id="help" style="padding-top:3rem">
-    <div class="reveal">
-      <p class="section-label">Need official figures?</p>
-      <h2 class="section-title" style="font-size:1.75rem">We're here to help you decide</h2>
-    </div>
-    <div class="service-row reveal reveal-delay-1">
-      <div class="service-card">
-        <h4>Official data first</h4>
-        <p>STEWARD leads with town-verified project costs and median-household impact. Optional personalization uses the published tax formula — not predictions.</p>
-      </div>
-      <div class="service-card">
-        <h4>Finance Department</h4>
-        <p>For official bond resolutions, tax rates, and audit-ready figures, contact the North Castle Finance Department.</p>
-        <p style="margin-top:0.5rem"><a href="mailto:jegan@northcastleny.com">jegan@northcastleny.com</a></p>
-      </div>
-      <div class="service-card">
-        <h4>Town Board &amp; meetings</h4>
-        <p>Capital votes happen at public Town Board sessions. STEWARD is an educational tool — always confirm final numbers with town staff before decisions.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="total-band" id="total">
-    <div class="total-band-inner reveal">
-      <div>
-        <p class="section-label">Typical homeowner</p>
-        <h2 class="section-title" style="margin-bottom:0.5rem">If the town borrows</h2>
-        <p class="section-desc" style="max-width:28rem">About this much extra per year for a middle-of-the-road tax bill — slide above to match yours.</p>
-      </div>
-      <div style="text-align:right">
-        <div class="total-big" id="totalBig">$364.12</div>
-        <p class="total-sub" style="font-size:0.88rem;margin-top:0.5rem" id="totalSub">per year · town median · 30-year bond</p>
-      </div>
-    </div>
-  </section>
-
-  <div class="disclaimer">
-    STEWARD displays educational estimates based on official town data. For official figures, contact the North Castle Finance Department at
-    <a href="mailto:jegan@northcastleny.com">jegan@northcastleny.com</a>
+  <div class="ctl">
+    <div class="lab">Computer load
+      <span class="tip" tabindex="0" data-tip="How much power the servers themselves draw. Cooling is added on top automatically, based on the cooling method you pick below.">?</span>
+      <span class="val" id="sizeVal"></span></div>
+    <input type="range" id="size" min="0" max="100" value="47" aria-label="Computer load">
   </div>
 
-  <footer>
-    STEWARD v5.4.0 · Built by Arun Das, Intern — Town of North Castle | Eagle Scout, Troop 94 Armonk<br>
-    Data: Abbas Sura (Finance) &amp; Adam Kaufman (Planning)
-  </footer>
-
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
-    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
-    <img src="" alt="" id="lightboxImg">
+  <div class="ctl">
+    <div class="lab">Power plant type
+      <span class="tip" tabindex="0" data-tip="Combined cycle reuses its own exhaust heat, so it burns less gas (and makes less CO₂) per unit of electricity. Simple cycle is basically a jet engine — cheaper to build, dirtier to run.">?</span></div>
+    <div class="radios">
+      <label><input type="radio" name="turbine" value="0.37" checked> Combined cycle — cleaner (0.37 t CO₂/MWh)</label>
+      <label><input type="radio" name="turbine" value="0.56"> Simple cycle — dirtier (0.56 t CO₂/MWh)</label>
+    </div>
   </div>
 
-  <script>
-    /* ========== ALL DATA ========== */
-    const STEWARD_DATA = {
-      meta: { town: "Town of North Castle, NY", version: "5.4.0" },
-      avMin: 1000,
-      avMax: 500000,
-      tooltips: {
-        bond: "Money the town borrows and repays over many years, typically funded through property taxes.",
-        assessedValue: "The value North Castle assigns to your property for tax purposes — find it on your tax bill.",
-        marketValue: "What a home might sell for (often $1M+ in Armonk). This is NOT the number on your tax bill — assessed value is usually much lower.",
-        taxRate: "Dollars of tax owed per $1,000 of assessed property value.",
-        fundBalance: "The town's savings reserve — spending it avoids new debt but reduces funds available for emergencies.",
-        debtService: "The total annual payment the town makes to repay bond principal and interest.",
-        median: "The middle value — half of North Castle homes are assessed above this, half below."
-      },
-      images: {
-        hero: "rfei-174.jpg",
-        campus: "rfei-168.jpg",
-        aerial: "rfei-171.jpg",
-        park: "rfei-172.jpg",
-        rendering: "rfei-096.jpg",
-        plan: "rfei-109.jpg"
-      },
-      townHall: {
-        name: "Town Hall / Highway Garage Relocation",
-        totalCost: 70000000,
-        bondAmount: 40000000,
-        bondTerm: 30,
-        interestRate: 0.0375,
-        annualDebtService: 2804381,
-        taxRateIncrease: 18.39,
-        currentTaxRate: 173.10,
-        newTaxRate: 191.49,
-        medianAssessedValue: 19800,
-        medianAnnualImpact: 364.12,
-        totalHouseholds: 3923,
-        fundBalanceDraw: 15000000,
-        dataSource: "Verified by Abbas Sura, Director of Finance, Town of North Castle, November 2025",
-        imageCaption: "Rendering from Fareri Companies RFEI, Bedford Road Redevelopment, Nov 2025",
-        fundingBreakdown: [
-          { source: "30-Year Municipal Bond", amount: 40000000 },
-          { source: "Town Fund Balance", amount: 15000000 },
-          { source: "School District Contribution", amount: 9000000 },
-          { source: "Sewer & Water Department", amount: 800000 },
-          { source: "Recreation Fund", amount: 500000 },
-          { source: "Community Benefits Agreements", amount: 4700000 }
-        ],
-        includes: [
-          "Town Hall expansion: 8,000 sq ft → 18,000 sq ft",
-          "New Police Station: 9,700 sq ft",
-          "New Courthouse: 5,000 sq ft",
-          "Highway Dept relocation to 215 Business Park Drive",
-          "Central Commons park with baseball, soccer, pickleball, amphitheater",
-          "1.7 miles of walking trails, dog park",
-          "Cornell Birdsall House adaptive reuse"
-        ],
-        gallery: [
-          { src: "rfei-174.jpg", cap: "Bedford Road campus vision" },
-          { src: "rfei-168.jpg", cap: "Site overview" },
-          { src: "rfei-171.jpg", cap: "Aerial context" },
-          { src: "rfei-172.jpg", cap: "Central Commons" },
-          { src: "rfei-096.jpg", cap: "Development rendering" },
-          { src: "rfei-109.jpg", cap: "Master plan" }
-        ]
-      },
-      sustainability: [
-        { title: "One campus, less sprawl", text: "Consolidates town offices, police, courts, and highway operations instead of scattering facilities." },
-        { title: "Highway moved off Bedford Road", text: "Relocates highway dept to 215 Business Park Drive — reduces downtown congestion from school buses and fleet traffic." },
-        { title: "Central Commons & trails", text: "1.7 miles of walking trails, dog park, and multi-use fields — public recreation in the project footprint." },
-        { title: "Adaptive reuse", text: "Cornell Birdsall House preserved and repurposed rather than demolished — historic asset retained." },
-        { title: "30-year bond horizon", text: "Long-term municipal financing matches the life of the facilities — standard practice for civic infrastructure." },
-        { title: "AAA bond rating", text: "North Castle's AAA rating supports favorable borrowing terms on the $40M bond portion." }
-      ],
-      howToUse: [
-        { title: "What’s the project?", text: "A $70 million rebuild: Town Hall, police, courts, highway garage move, and a new community park — all on Bedford Road." },
-        { title: "How do we pay for it?", text: "Either borrow (bond) and spread cost over 30 years, or use town savings (fund balance) with no new yearly tax." },
-        { title: "What’s my share?", text: "Scroll down, move the slider to your tax-bill number, and watch the chart update. Typical home: about $364 extra per year if bonded." }
-      ],
-      residentQuestions: [
-        { q: "What is a bond?", a: "The town borrows money and pays it back over 30 years — like a mortgage for public buildings. That cost shows up on property taxes." },
-        { q: "What is fund balance?", a: "Money the town already saved. Spending it avoids new debt, but there’s less cash left for emergencies." },
-        { q: "My house sold for $1M — why does the slider say $19,800?", a: "Your tax bill uses assessed value, not sale price. Look at your property tax statement for the right number." }
-      ],
-      bondRating: "AAA"
-    };
+  <div class="ctl">
+    <div class="lab">Cooling method
+      <span class="tip" tabindex="0" data-tip="Computers make heat; getting rid of it costs either energy or water. Evaporative: cheap but thirsty. Air: no water, most extra energy. Liquid loop: efficient, low water, pricier to build. These numbers are industry-typical estimates.">?</span></div>
+    <div class="radios">
+      <label><input type="radio" name="cooling" value="evap" checked> Evaporative — uses lots of water</label>
+      <label><input type="radio" name="cooling" value="air"> Air / dry — uses lots of energy</label>
+      <label><input type="radio" name="cooling" value="liquid"> Liquid loop — efficient, costs more to build</label>
+    </div>
+  </div>
 
-    let ASSET_BASE = "steward-assets/";
-    let assessedValue = STEWARD_DATA.townHall.medianAssessedValue;
-    let explorer = { view: "fiscal", funding: "bond", metric: "annual" };
+  <div class="ctl">
+    <div class="lab">Water price
+      <span class="tip" tabindex="0" data-tip="What you pay per cubic meter (about 264 gallons) of water. Industrial cooling water can be as cheap as $0.03; city water in dry regions can top $2.">?</span>
+      <span class="val" id="waterpriceVal"></span></div>
+    <input type="range" id="waterprice" min="3" max="200" value="50" aria-label="Water price">
+  </div>
 
-    function asset(file) {
-      const name = file.replace(/^steward-assets\//, "");
-      return ASSET_BASE + name;
-    }
+  <div class="ctl">
+    <div class="lab">CO₂ captured
+      <span class="tip" tabindex="0" data-tip="What share of the exhaust CO₂ the scrubber grabs. 90% is the industry standard; going above 95% barely costs more per tonne, but below ~70% each tonne gets pricier.">?</span>
+      <span class="val" id="capfracVal"></span></div>
+    <input type="range" id="capfrac" min="50" max="99" value="90" aria-label="Capture percentage">
+  </div>
 
-    function resolveAssetBase(done) {
-      const bases = ["steward-assets/", "../steward-assets/", "./steward-assets/"];
-      let i = 0;
-      function next() {
-        if (i >= bases.length) { done(); return; }
-        const t = new Image();
-        t.onload = () => { ASSET_BASE = bases[i]; done(); };
-        t.onerror = () => { i++; next(); };
-        t.src = bases[i] + "rfei-174.jpg";
-      }
-      next();
-    }
+  <div class="ctl">
+    <div class="lab">Uptime
+      <span class="tip" tabindex="0" data-tip="How much of the year the plant actually runs. AI data centers run nearly around the clock (90%+).">?</span>
+      <span class="val" id="cfVal"></span></div>
+    <input type="range" id="cf" min="30" max="100" value="90" aria-label="Uptime">
+  </div>
 
-    function patchGalleryPaths() {
-      const img = STEWARD_DATA.images;
-      Object.keys(img).forEach(k => { img[k] = asset(img[k]); });
-      STEWARD_DATA.townHall.gallery.forEach(g => { g.src = asset(g.src); });
-    }
+  <div class="ctl">
+    <div class="lab">Pipeline to storage site
+      <span class="tip" tabindex="0" data-tip="Captured CO₂ is squeezed into a liquid-like state and piped to a place where it can be injected underground. Longer pipe = more cost per tonne, especially for small plants.">?</span>
+      <span class="val" id="distVal"></span></div>
+    <input type="range" id="dist" min="0" max="400" value="100" aria-label="Pipeline distance">
+  </div>
 
-    const fmt = (n, opts = {}) =>
-      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0, ...opts }).format(n);
-    const fmtDec = (n) =>
-      new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
-    const fmtNum = (n) => new Intl.NumberFormat("en-US").format(n);
+  <div class="ctl">
+    <div class="lab">Carbon tax
+      <span class="tip" tabindex="0" data-tip="What you pay per tonne of CO₂ released to the sky. Set $0 if no tax applies where you're building.">?</span>
+      <span class="val" id="taxVal"></span></div>
+    <input type="range" id="tax" min="0" max="200" value="0" aria-label="Carbon tax">
+  </div>
 
-    function tip(term, key) {
-      return `<span class="term" tabindex="0" data-tip="${STEWARD_DATA.tooltips[key] || ""}">${term}</span>`;
-    }
+  <div class="ctl">
+    <div class="lab">Carbon credit price
+      <span class="tip" tabindex="0" data-tip="What you EARN per tonne stored underground. The US 45Q tax credit pays $85/tonne — but only if you capture at least 18,750 tonnes a year.">?</span>
+      <span class="val" id="creditVal"></span></div>
+    <input type="range" id="credit" min="0" max="250" value="85" aria-label="Credit price">
+  </div>
 
-    function bondAnnualImpact(av) {
-      return (av * STEWARD_DATA.townHall.taxRateIncrease) / 1000;
-    }
+  <div class="ctl">
+    <div class="lab">Storage cost
+      <span class="tip" tabindex="0" data-tip="The cost to inject CO₂ underground and monitor it. This is a placeholder — the source report covers it in a separate volume we don't have yet.">?</span>
+      <span class="val" id="storageVal"></span></div>
+    <input type="range" id="storage" min="0" max="40" value="12" aria-label="Storage cost">
+  </div>
 
-    function getResidentMetrics(av) {
-      const th = STEWARD_DATA.townHall;
-      const currentAnnual = (av * th.currentTaxRate) / 1000;
-      const newAnnual = (av * th.newTaxRate) / 1000;
-      const increase = bondAnnualImpact(av);
-      return {
-        currentAnnual,
-        newAnnual,
-        increase,
-        monthlyIncrease: increase / 12,
-        ratePctIncrease: (th.taxRateIncrease / th.currentTaxRate) * 100
-      };
-    }
+  <div class="ctl">
+    <div class="lab">Methane potency (GWP)
+      <span class="tip" tabindex="0" data-tip="How many times worse leaked methane is than CO₂ over 100 years. Scientific estimates range from 28 to 36; the latest IPCC value for fossil methane is 29.8.">?</span>
+      <span class="val" id="gwpVal"></span></div>
+    <input type="range" id="gwp" min="28" max="36" value="30" step="0.1" aria-label="Methane GWP">
+  </div>
 
-    function formatRate(r) { return r.toFixed(2); }
+  <div class="side-foot">
+    Costs from <em>Advancements in CCS Technologies and Costs</em>, Global CCS Institute, Jan 2025.
+    New in v3: a data library of raw tables from NETL reports (reference only — not wired into the model).
+    Every number's origin is in the <strong>QA &amp; Sources</strong> tab.
+  </div>
+</aside>
 
-    function renderStaticContent() {
-      document.getElementById("howToSteps").innerHTML = STEWARD_DATA.howToUse.map((s, i) => `
-        <div class="step-card">
-          <div class="step-num">Step ${i + 1}</div>
-          <h4>${s.title}</h4>
-          <p>${s.text}</p>
-        </div>
-      `).join("");
+<!-- ================= MAIN ================= -->
+<main class="main">
+  <h1>Capture the CO₂, or let it go?</h1>
+  <div class="sub">A gas-powered data center makes CO₂. This tool tells you whether catching and burying it beats venting it — for your exact setup.</div>
 
-      document.getElementById("residentQuestions").innerHTML = STEWARD_DATA.residentQuestions.map(r => `
-        <div class="question-card">
-          <p class="q">${r.q}</p>
-          <p class="a">${r.a}</p>
-        </div>
-      `).join("");
-    }
+  <details class="exp">
+    <summary>New here? The whole idea in 60 seconds</summary>
+    <div class="body">
+      <p><strong>Why does a data center make CO₂?</strong> New AI data centers often can't wait years for a grid hookup, so they generate their own power on site by burning natural gas. Burning gas makes electricity — and CO₂ (the chemistry: CH₄ + 2O₂ → CO₂ + 2H₂O).</p>
+      <p><strong>The choice.</strong> Either <em>vent</em> the CO₂ up the stack (and pay a carbon tax, if there is one), or <em>capture</em> it: scrub it out of the exhaust with a chemical sponge, compress it, pipe it away, and inject it a mile underground — which can earn you <em>carbon credits</em> ($85/tonne in the US).</p>
+      <p><strong>The race.</strong> Do the credits you earn (plus taxes you avoid) beat the cost of all that equipment? Big plants win far more easily than small ones. Set the sliders to your situation and watch the verdict below.</p>
+    </div>
+  </details>
 
-    function renderTaxCompare(av) {
-      const m = getResidentMetrics(av);
-      const maxVal = m.newAnnual * 1.05;
-      const basePct = (m.currentAnnual / maxVal) * 100;
-      const addPct = (m.increase / maxVal) * 100;
+  <div class="metrics" id="cards"></div>
+  <div id="verdict"></div>
+  <div id="flags"></div>
 
-      const el = document.getElementById("taxCompareBlock");
-      if (!el) return;
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="active" data-tab="t-decision">The decision</button>
+    <button data-tab="t-scale">Size matters</button>
+    <button data-tab="t-methane">Methane</button>
+    <button data-tab="t-cooling">Cooling</button>
+    <button data-tab="t-library">Data library</button>
+    <button data-tab="t-qa">QA &amp; sources</button>
+  </div>
 
-      el.innerHTML = `
-        <h3>Your yearly property tax — before & after</h3>
-        <p class="tax-compare-sub">If the town borrows for this project, your tax rate goes up. Shown at ${fmt(av)} assessed value (from your tax bill).</p>
+  <!-- TAB: Decision -->
+  <section class="tabpane show" id="t-decision">
+    <h2>Route A vs. Route B <span class="tip" tabindex="0" data-tip="Route A: release everything, pay tax on it. Route B: capture most of it, pay the equipment chain, earn credits — but still pay tax on the bit you missed.">?</span></h2>
+    <div class="routes" id="routes"></div>
+    <h2>Where the decision flips <span class="tip" tabindex="0" data-tip="This chart sweeps the credit price from $0 to $250 and shows each route's yearly cost. Where the lines cross, the two options cost the same. Below zero means you're making money.">?</span></h2>
+    <div class="chart-box"><canvas id="beChart" height="110"></canvas><div class="cap" id="beCap"></div></div>
+  </section>
 
-        <div class="tax-bar-row">
-          <div class="tax-bar-label">
-            <span>Today (current ${tip("tax rate", "taxRate")})</span>
-            <strong id="taxCurrentLabel">${fmtDec(m.currentAnnual)}/yr</strong>
-          </div>
-          <div class="tax-bar-track">
-            <div class="tax-bar-fill base" id="taxBarBase" style="width:${basePct}%"></div>
-          </div>
-        </div>
+  <!-- TAB: Scale -->
+  <section class="tabpane" id="t-scale">
+    <h2>Cost per tonne, small vs. huge <span class="tip" tabindex="0" data-tip="Capture equipment gets much cheaper per tonne as plants grow — but only up to a point. The dashed line is your credit price: bars below it mean the credit alone pays for the whole chain.">?</span></h2>
+    <div class="chart-box"><canvas id="stackChart" height="130"></canvas><div class="cap" id="stackCap"></div></div>
+  </section>
 
-        <div class="tax-bar-row">
-          <div class="tax-bar-label">
-            <span>With Town Hall bond (+${formatRate(STEWARD_DATA.townHall.taxRateIncrease)} per $1,000)</span>
-            <strong id="taxNewLabel" style="color:var(--gold)">${fmtDec(m.newAnnual)}/yr</strong>
-          </div>
-          <div class="tax-bar-track">
-            <div class="tax-bar-fill base" style="width:${basePct}%"></div>
-            <div class="tax-bar-fill add" id="taxBarAdd" style="width:${addPct}%">+${fmtDec(m.increase)}</div>
-          </div>
-        </div>
+  <!-- TAB: Methane -->
+  <section class="tabpane" id="t-methane">
+    <h2>Why burning methane helps even without capture <span class="tip" tabindex="0" data-tip="Natural gas IS methane, and leaked methane traps ~30× more heat than CO₂ over a century. Burning it converts it to the much weaker gas — so combustion alone removes ~90% of the harm, and capture removes most of the rest.">?</span></h2>
+    <p class="small">All bars show the 100-year climate impact of one tonne of methane, in CO₂-equivalent tonnes. Adjust the potency slider in the sidebar to see how the science range (28–36×) changes the picture.</p>
+    <div class="chart-box"><canvas id="ch4Chart" height="95"></canvas><div class="cap" id="ch4Cap"></div></div>
+  </section>
 
-        <div class="context-pills">
-          <div class="context-pill">≈ <span id="monthlyPill">${fmtDec(m.monthlyIncrease)}</span>/month added</div>
-          <div class="context-pill"><span id="pctPill">${m.ratePctIncrease.toFixed(1)}%</span> tax rate increase</div>
-          <div class="context-pill">Town bond rating: <span>${STEWARD_DATA.bondRating}</span></div>
-        </div>
+  <!-- TAB: Cooling -->
+  <section class="tabpane" id="t-cooling">
+    <h2>The cooling trade-off: energy vs. water <span class="tip" tabindex="0" data-tip="Every watt of computing becomes heat. Removing heat costs either extra energy (fans, chillers → more gas burned → more CO₂) or water (evaporation). There's no free lunch — only different lunches.">?</span></h2>
+    <table class="data">
+      <thead><tr><th>Method</th><th>Energy overhead <span class="tip" tabindex="0" data-tip="'PUE' — total power ÷ computer power. PUE 1.20 means every 1 MW of computers needs 0.2 MW extra, mostly for cooling.">?</span></th><th>Water use <span class="tip" tabindex="0" data-tip="Liters of water consumed per kilowatt-hour of computing. Evaporative cooling literally works by losing water to the air.">?</span></th><th>In plain terms</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Evaporative</strong></td><td class="mono">+20% (PUE 1.20)</td><td class="mono">1.40 L/kWh</td><td>Cheapest to run; drinks water like a small town. Tough in dry regions like West Texas.</td></tr>
+        <tr><td><strong>Air / dry</strong></td><td class="mono">+40% (PUE 1.40)</td><td class="mono">0.05 L/kWh</td><td>Almost no water; pays with big fans and the worst energy bill — meaning the most extra CO₂.</td></tr>
+        <tr><td><strong>Liquid loop</strong></td><td class="mono">+12% (PUE 1.12)</td><td class="mono">0.15 L/kWh</td><td>Best of both worlds operationally, but costs more to build (not modeled here). Suits dense AI racks.</td></tr>
+      </tbody>
+    </table>
+    <div class="alert warning"><span class="tag">Caveat</span><div><strong>These six numbers are industry-typical estimates.</strong> They're not from the CCS report and haven't been verified against a primary source yet — swap in real values when the cooling references arrive. Your selection changes every CO₂ and cost figure in the app.</div></div>
+  </section>
 
-      `;
-    }
+  <!-- TAB: Data library (NEW in v3) -->
+  <section class="tabpane" id="t-library">
+    <h2>Raw tables from beyond the GCCSI report <span class="tip" tabindex="0" data-tip="Three additional primary sources, shown verbatim for reference. Nothing here is wired into the model or the verdicts — the sliders and charts still run entirely on the GCCSI-based model. These tables are the raw material for future versions.">?</span></h2>
+    <div class="alert info"><span class="tag">Note</span><div><strong>Reference only.</strong> These tables demonstrate data coverage beyond the GCCSI report. They are displayed as published and are <em>not</em> used in any calculation in this tool. Provenance for every row is in the QA tab ledger.</div></div>
 
+    <h3 class="tbl">Source 1 — NETL Fossil Energy Baseline Rev 4a (Oct 2022): NGCC case matrix <span class="tip" tabindex="0" data-tip="The US Department of Energy's reference techno-economic study. These are real gas combined-cycle plant designs with a vendor-quoted Shell CANSOLV capture system, costed in 2018 dollars at 85% capacity factor.">?</span></h3>
+    <table class="data">
+      <thead><tr><th>Case</th><th>Turbine</th><th>Steam cycle psig/°F/°F</th><th>CO₂ separation</th><th>Capture rate</th><th>Net power (MW)</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">B31A</td><td>2 × F-Class (2017 SOTA)</td><td class="mono">2400/1085/1085</td><td>—</td><td class="mono">0%</td><td class="mono">727</td></tr>
+        <tr><td class="mono">B31B.90</td><td>2 × F-Class</td><td class="mono">2400/1085/1085</td><td>Cansolv</td><td class="mono">90%</td><td class="mono">645</td></tr>
+        <tr><td class="mono">B31B.95</td><td>2 × F-Class</td><td class="mono">2400/1085/1085</td><td>Cansolv</td><td class="mono">95%</td><td class="mono">640</td></tr>
+        <tr><td class="mono">B32A</td><td>2 × H-Class (2017 SOTA)</td><td class="mono">2700/1085/1045</td><td>—</td><td class="mono">0%</td><td class="mono">992</td></tr>
+        <tr><td class="mono">B32B.90</td><td>2 × H-Class</td><td class="mono">2700/1085/1045</td><td>Cansolv</td><td class="mono">90%</td><td class="mono">883</td></tr>
+        <tr><td class="mono">B32B.95</td><td>2 × H-Class</td><td class="mono">2700/1085/1045</td><td>Cansolv</td><td class="mono">95%</td><td class="mono">877</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Report headlines, printed values: cost of CO₂ capture for the 90% F-class case is <strong>$61/tonne</strong> (down from $80/t before the 2022 vendor-quote update); adding capture raises NGCC LCOE by <strong>52–60%</strong> and cuts relative efficiency by <strong>11–12 points</strong>; going 90% → 95% adds only <strong>+1.8%</strong> to LCOE.</p>
 
-    function renderSimpleChart() {
-      const el = document.getElementById("simpleViz");
-      if (!el || explorer.view !== "fiscal") return;
-      const th = STEWARD_DATA.townHall;
-      const annual = explorer.funding === "bond" ? bondAnnualImpact(assessedValue) : 0;
-      const cumulative = annual * th.bondTerm;
-      const milestones = [1, 5, 10, 15, 20, 25, 30];
+    <h3 class="tbl">Source 2 — NETL FEB Volume 5 (May 2023): flexibility of gas fleets <span class="tip" tabindex="0" data-tip="Start times, ramp rates, and minimum loads for eleven studied gas-fired configurations. RICE = banks of reciprocating engines. Aero SC = aeroderivative simple-cycle turbines. NGCC = combined cycle. Min load = lowest output that stays within emissions permits (NETL: MECL).">?</span></h3>
+    <table class="data">
+      <thead><tr><th>Case</th><th>Type</th><th>Nameplate (MW)</th><th>Cold start (min)</th><th>Warm start (min)</th><th>Hot start (min)</th><th>Ramp (%/min)</th><th>Min load (%)</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">R6A-S</td><td>RICE 6 × 18 MW (spinning)</td><td class="mono">113</td><td class="mono">n/a</td><td class="mono">10</td><td class="mono">5</td><td class="mono">60.0</td><td class="mono">9.7</td></tr>
+        <tr><td class="mono">R6A-E</td><td>RICE 6 × 18 MW (efficiency)</td><td class="mono">113</td><td class="mono">n/a</td><td class="mono">10</td><td class="mono">5</td><td class="mono">23.3</td><td class="mono">0.8</td></tr>
+        <tr><td class="mono">R12A-S</td><td>RICE 12 × 9 MW (spinning)</td><td class="mono">113</td><td class="mono">n/a</td><td class="mono">10</td><td class="mono">5</td><td class="mono">60.0</td><td class="mono">9.7</td></tr>
+        <tr><td class="mono">R12A-E</td><td>RICE 12 × 9 MW (efficiency)</td><td class="mono">113</td><td class="mono">n/a</td><td class="mono">10</td><td class="mono">5</td><td class="mono">26.7</td><td class="mono">0.8</td></tr>
+        <tr><td class="mono">SC1A</td><td>Aero SC 1 × 100 MW</td><td class="mono">116</td><td class="mono">n/a</td><td class="mono">10</td><td class="mono">8</td><td class="mono">43.1</td><td class="mono">16</td></tr>
+        <tr><td class="mono">SC2A</td><td>Aero SC 2 × 50 MW</td><td class="mono">105</td><td class="mono">n/a</td><td class="mono">10</td><td class="mono">5</td><td class="mono">95.2</td><td class="mono">50</td></tr>
+        <tr><td class="mono">CC1A-F</td><td>NGCC 1×1 F-class</td><td class="mono">375</td><td class="mono">130</td><td class="mono">50</td><td class="mono">35</td><td class="mono">10.7</td><td class="mono">49</td></tr>
+        <tr><td class="mono">CC1A-H</td><td>NGCC 1×1 H-class</td><td class="mono">560</td><td class="mono">130</td><td class="mono">85</td><td class="mono">30</td><td class="mono">10.7</td><td class="mono">38</td></tr>
+        <tr><td class="mono">CC2A-F</td><td>NGCC 2×1 F-class</td><td class="mono">751</td><td class="mono">120</td><td class="mono">45</td><td class="mono">32</td><td class="mono">10.7</td><td class="mono">50</td></tr>
+        <tr><td class="mono">CC2A-FC</td><td>NGCC 2×1 F (conventional start)</td><td class="mono">751</td><td class="mono">250</td><td class="mono">140</td><td class="mono">90</td><td class="mono">10.7</td><td class="mono">50</td></tr>
+        <tr><td class="mono">CC2A-H</td><td>NGCC 2×1 H-class</td><td class="mono">1,124</td><td class="mono">120</td><td class="mono">70</td><td class="mono">30</td><td class="mono">10.8</td><td class="mono">38</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Per the report: 2×1 configuration values overlap their respective 1×1 cases; natural gas options are inherently flexible; these plants are market-independent and <em>not capture-ready</em>.</p>
 
-      if (explorer.funding === "fund") {
-        el.innerHTML = `
-          <div class="fund-zero">
-            <p class="simple-viz-headline">If the town uses savings instead of borrowing</p>
-            <div class="simple-big">$0<span class="unit">/year extra</span></div>
-            <p class="simple-sub">No added yearly cost on your property tax bill. The town would spend ${fmt(th.bondAmount)} from reserves once (not spread over 30 years).</p>
-          </div>`;
-        updateChartStats();
-        return;
-      }
+    <h3 class="tbl">Source 3 — NETL NGCC + Exhaust Gas Recycle study (2024): headline results <span class="tip" tabindex="0" data-tip="EGR routes some exhaust back to the turbine inlet to concentrate CO₂, hoping to make capture cheaper. NETL's update to its 2013 study on the idea, consistent with EPRI's recent findings.">?</span></h3>
+    <table class="data">
+      <thead><tr><th>Finding</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>LCOE change with the greatest EGR (50%)</td><td class="mono">−$0.61 to −$0.68 /MWh</td></tr>
+        <tr><td>LCOE reduction from lower capital cost</td><td class="mono">≈ 1.5%</td></tr>
+        <tr><td>Total capital cost, 50% EGR cases vs. base</td><td class="mono">up to 4% lower</td></tr>
+        <tr><td>Bottom line (report's words)</td><td>"minimal improvement in the LCOE"; ductwork could still be prudent in greenfield designs for flexibility</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-      const isCumulative = explorer.metric === "cumulative";
-      const maxBar = isCumulative ? cumulative : annual;
-      const barPct = (val) => Math.max(12, (val / (maxBar || 1)) * 100);
+  <!-- TAB: QA -->
+  <section class="tabpane" id="t-qa">
+    <h2>Does the math check out?</h2>
+    <p class="small">These tests run in your browser every time the page loads, against the very same functions that power the dashboard — nothing here is pasted in.</p>
+    <div id="qaSummary"></div>
 
-      let barsHtml = milestones.map(yr => {
-        const val = isCumulative ? annual * yr : annual;
-        const h = isCumulative ? barPct(val) : 100;
-        const label = isCumulative ? fmtDec(val) : fmtDec(annual);
-        return `
-          <div class="simple-bar-col">
-            ${isCumulative ? `<span class="simple-bar-value">${label}</span>` : ""}
-            <div class="simple-bar" style="height:${h}%"></div>
-            <span class="simple-bar-label">Year ${yr}</span>
-          </div>`;
-      }).join("");
+    <details class="exp"><summary>Unit tests — model vs. the source report</summary>
+      <div class="body" id="qaTests"></div></details>
 
-      const headline = isCumulative
-        ? "Total extra paid over 30 years (adds up each year)"
-        : "Same extra amount every year of the bond";
-      const bigNum = isCumulative ? fmtDec(cumulative) : fmtDec(annual);
-      const unit = isCumulative ? " total" : "/year";
-      const sub = isCumulative
-        ? `That's ${fmtDec(annual)} per year × 30 years, at ${fmt(assessedValue)} assessed value on your tax bill.`
-        : `This amount repeats each year for all ${th.bondTerm} years — about ${fmtDec(annual / 12)} per month.`;
+    <details class="exp"><summary>How well do the curve fits match the source? (R² &amp; residuals)</summary>
+      <div class="body" id="qaFit"></div></details>
 
-      el.innerHTML = `
-        <p class="simple-viz-headline">${headline}</p>
-        <div class="simple-big">${bigNum}<span class="unit">${unit}</span></div>
-        <p class="simple-sub">${sub}</p>
-        <div class="simple-bars" aria-label="Chart by year">${barsHtml}</div>
-        <p class="simple-sub" style="margin-top:1rem;font-size:0.88rem">Bar height ${isCumulative ? "shows running total" : "is the same each year — the cost does not go up year to year"}.</p>
-      `;
-      updateChartStats();
-    }
+    <details class="exp"><summary>Where every number comes from (provenance ledger)</summary>
+      <div class="body">
+        <p class="small">Badges: <span class="badge exact">exact</span> printed in the source · <span class="badge readoff">read-off</span> measured from a chart · <span class="badge fitted">fitted</span> curve fit to source data · <span class="badge estimate">estimate</span> general knowledge, unverified · <span class="badge single">single source</span> · <span class="badge stale">stale</span> old vintage, flagged.</p>
+        <div id="qaProv"></div>
+      </div></details>
 
-    function updateChartStats() {
-      const th = STEWARD_DATA.townHall;
-      const annual = explorer.funding === "bond" ? bondAnnualImpact(assessedValue) : 0;
-      const cumulative = annual * th.bondTerm;
-      const s1 = document.getElementById("stat1");
-      const s2 = document.getElementById("stat2");
-      const s3 = document.getElementById("stat3");
-      if (explorer.funding === "fund") {
-        if (s1) { s1.querySelector(".num").textContent = "$0"; s1.querySelector(".lbl").textContent = "Extra per year"; }
-        if (s2) { s2.querySelector(".num").textContent = fmt(th.bondAmount); s2.querySelector(".lbl").textContent = "From town savings"; }
-        if (s3) { s3.querySelector(".num").textContent = "$0"; s3.querySelector(".lbl").textContent = "30-year total (you)"; }
-      } else if (explorer.metric === "cumulative") {
-        if (s1) { s1.querySelector(".num").textContent = fmtDec(cumulative); s1.querySelector(".lbl").textContent = "30-year total"; }
-        if (s2) { s2.querySelector(".num").textContent = fmtDec(annual); s2.querySelector(".lbl").textContent = "Each year"; }
-        if (s3) { s3.querySelector(".num").textContent = fmtDec(annual / 12); s3.querySelector(".lbl").textContent = "Per month"; }
-      } else {
-        if (s1) { s1.querySelector(".num").textContent = fmtDec(annual); s1.querySelector(".lbl").textContent = "Extra per year"; }
-        if (s2) { s2.querySelector(".num").textContent = fmtDec(annual / 12); s2.querySelector(".lbl").textContent = "Per month"; }
-        if (s3) { s3.querySelector(".num").textContent = fmtDec(cumulative); s3.querySelector(".lbl").textContent = "30-year total"; }
-      }
-    }
+    <details class="exp"><summary>v2.1 → v3 regression checklist — nothing lost</summary>
+      <div class="body" id="qaRegression"></div></details>
 
-    function updateMetricVisibility() {
-      const mg = document.getElementById("metricToggleGroup");
-      if (mg) mg.style.display = explorer.funding === "fund" ? "none" : "";
-    }
+    <details class="exp"><summary>Changelog</summary>
+      <div class="body">
+        <p><strong>v3</strong> — Added Data Library tab with raw tables from three new primary sources (NETL Fossil Energy Baseline Rev 4a, NETL FEB Volume 5 flexibility study, NETL NGCC+EGR study), shown verbatim for reference and not wired into the model. Emoji-free pass across all UI text; alert icons replaced with text tags. Provenance ledger extended with the new sources. No model changes; all v2.1 features, tests, and behavior preserved (see regression checklist).</p>
+        <p><strong>v2.1</strong> — UI simplified to a Streamlit-style layout: tabs, plain radio controls, metric cards with deltas, tooltips on every input and output, long reference material moved into expanders. No model changes; all v2 tests, provenance, and features preserved.</p>
+        <p><strong>v2</strong> — Added break-even chart; methane module with adjustable potency (28–36×) and flaring scenario; cooling selector propagating energy overhead into all CO₂/cost figures plus water volume &amp; cost; provenance ledger; in-browser unit tests with fit metrics; size input redefined as computer (IT) load; water price input; changelog &amp; regression checklist.</p>
+        <p><strong>v1</strong> — Baseline: CCS chain costs from the GCCSI Jan 2025 report; vent-vs-capture comparison; economies-of-scale chart; methane potency chart; technology table; glossary; caveats.</p>
+      </div></details>
+  </section>
 
-    function bindExplorerToggles() {
-      document.querySelectorAll(".toggle-btns").forEach(group => {
-        group.querySelectorAll("button").forEach(btn => {
-          btn.addEventListener("click", () => {
-            group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            explorer[group.dataset.group] = btn.dataset.val;
-            const fiscal = document.getElementById("explorerFiscal");
-            const sustain = document.getElementById("explorerSustain");
-            if (group.dataset.group === "view") {
-              fiscal.classList.toggle("hidden", explorer.view !== "fiscal");
-              sustain.classList.toggle("hidden", explorer.view !== "sustainability");
-            }
-            updateMetricVisibility();
-            if (explorer.view === "fiscal") renderSimpleChart();
-          });
-        });
-      });
-      updateMetricVisibility();
-    }
+  <!-- Bottom reference expanders -->
+  <h2 style="margin-top:34px">Reference shelf</h2>
+  <details class="exp"><summary>Plain-English glossary</summary>
+    <div class="body"><dl class="gloss">
+      <dt>Behind the meter</dt><dd>Power made on site for your own use, skipping the public grid.</dd>
+      <dt>PUE</dt><dd>Total facility power ÷ computer power. 1.20 = 20% overhead, mostly cooling.</dd>
+      <dt>Capture fraction</dt><dd>The share of exhaust CO₂ the scrubber removes. The rest still escapes.</dd>
+      <dt>Dense phase</dt><dd>CO₂ squeezed until it behaves like a liquid — the cheapest form to pipe.</dd>
+      <dt>MEA</dt><dd>Monoethanolamine — the standard chemical "sponge" for CO₂, and the basis of all costs here.</dd>
+      <dt>45Q</dt><dd>The US tax credit for buried CO₂: $85/tonne, minimum 18,750 tonnes/year for power plants.</dd>
+      <dt>Breakeven credit price</dt><dd>The credit price at which capturing costs exactly the same as venting.</dd>
+      <dt>GWP</dt><dd>Global Warming Potential — how a gas compares to CO₂, tonne for tonne, over 100 years.</dd>
+      <dt>Flaring</dt><dd>Burning methane off at a stack without using the energy. Wasteful, but ~10× better than letting it leak.</dd>
+      <dt>TRL</dt><dd>Technology Readiness Level: 1 = idea on paper, 9 = proven in commercial service.</dd>
+      <dt>R²</dt><dd>A fit score: 1.0 = the curve passes through every data point.</dd>
+      <dt>NETL</dt><dd>National Energy Technology Laboratory — the US Department of Energy lab whose cost baselines are the standard reference for power-plant economics. Source of the v3 data library.</dd>
+      <dt>NGCC</dt><dd>Natural gas combined cycle: a gas turbine plus a steam turbine running off its exhaust heat.</dd>
+      <dt>CANSOLV</dt><dd>Shell's commercial amine capture system — the vendor-quoted technology behind NETL's capture costs.</dd>
+      <dt>EGR</dt><dd>Exhaust gas recycle — routing some exhaust back to the turbine inlet to concentrate CO₂ for cheaper capture.</dd>
+    </dl></div></details>
 
-    function renderShowcase() {
-      const th = STEWARD_DATA.townHall;
-      const items = th.gallery.slice(0, 5);
-      const grid = document.getElementById("showcaseGrid");
-      if (!grid) return;
-      grid.innerHTML = items.map((g, i) => `
-        <div class="showcase-item ${i === 0 ? 'showcase-main' : ''}" data-src="${g.src}" data-cap="${g.cap}">
-          <img src="${g.src}" alt="${g.cap}" loading="${i < 2 ? 'eager' : 'lazy'}" onerror="this.closest('.showcase-item').classList.add('img-missing');this.remove()">
-          <span class="showcase-cap">${g.cap}</span>
-        </div>
-      `).join("");
-      const lb = document.getElementById("lightbox");
-      const lbImg = document.getElementById("lightboxImg");
-      grid.querySelectorAll(".showcase-item").forEach(item => {
-        item.addEventListener("click", () => {
-          lbImg.src = item.dataset.src;
-          lbImg.alt = item.dataset.cap;
-          lb.classList.add("open");
-        });
-      });
-    }
+  <details class="exp"><summary>Capture technologies ranked by maturity (from the report)</summary>
+    <div class="body">
+      <table class="data">
+        <thead><tr><th>Technology</th><th>Maturity</th><th>One-sentence version</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Amine scrubbing (MEA)</strong></td><td class="mono">TRL 9</td><td>A liquid sponge soaks CO₂ out of exhaust, releases it when heated — the proven, bankable choice this model is built on.</td></tr>
+          <tr><td>Physical solvents</td><td class="mono">TRL 9</td><td>Dissolve CO₂ under pressure — great for concentrated streams, weak for dilute turbine exhaust.</td></tr>
+          <tr><td>Pressure-swing adsorption</td><td class="mono">TRL 9</td><td>Solids grab CO₂ under pressure, let go when it drops — commercial at hydrogen plants.</td></tr>
+          <tr><td>Cryogenic distillation</td><td class="mono">TRL 9</td><td>Chill the gas until CO₂ drops out as liquid — proven but energy-hungry.</td></tr>
+          <tr><td>Membranes</td><td class="mono">TRL 7–9</td><td>Films that let CO₂ through and block the rest — commercial for gas processing, still maturing for exhaust.</td></tr>
+          <tr><td>Enzyme-catalysed capture</td><td class="mono">TRL 7–8</td><td>A biological catalyst speeds up gentler solvents — demo plant running in Quebec.</td></tr>
+          <tr><td>Next-gen solvents</td><td class="mono">TRL 6–7</td><td>Designer chemistries that cut the biggest cost: the heat to wring CO₂ back out of the sponge.</td></tr>
+          <tr><td>Calcium looping</td><td class="mono">TRL 6–8</td><td>Lime grabs CO₂ hot and gives it back in a second reactor — a 0.5 Mtpa Texas plant is under construction.</td></tr>
+          <tr><td><strong>Allam-Fetvedt cycle</strong></td><td class="mono">TRL 6–7</td><td>A gas power plant redesigned so capture is built in — demonstrated at 50 MW in Texas. The one to watch for new data centers.</td></tr>
+          <tr><td>Lab-stage ideas</td><td class="mono">TRL 2–5</td><td>Ionic liquids, encapsulated solvents, electrochemical routes — watch, don't budget.</td></tr>
+        </tbody>
+      </table>
+    </div></details>
 
-    function renderDashboard() {
-      const th = STEWARD_DATA.townHall;
-      const minAV = STEWARD_DATA.avMin;
-      const maxAV = STEWARD_DATA.avMax;
-      const medianImpact = th.medianAnnualImpact;
-      const sustainCards = STEWARD_DATA.sustainability.map(s =>
-        `<div class="sustain-card"><h4>${s.title}</h4><p>${s.text}</p></div>`).join("");
+  <details class="exp"><summary>Honest caveats — read before quoting any number</summary>
+    <div class="body"><ul class="plain">
+      <li><strong>Capture costs are optimistic for gas plants.</strong> The source curve was modeled on coal exhaust (~14% CO₂). Gas-turbine exhaust is only 3–4% CO₂, which is harder to scrub — real costs run higher than shown.</li>
+      <li><strong>The report's own words:</strong> its figures are "an insight to trends rather than absolute cost values applicable to a project." Early-stage estimates can be off by −50%/+100%.</li>
+      <li><strong>Small plants are extrapolated.</strong> The source's smallest studied CO₂ flow is 328,500 t/yr; below that (roughly &lt;100 MW), compression costs are extended beyond the data — a warning appears when this happens.</li>
+      <li><strong>Cooling numbers and storage cost are placeholders</strong> pending primary sources; emission factors and 45Q rules come from outside the report.</li>
+      <li><strong>Pipeline costs assume flat, onshore terrain and exclude land.</strong> Chart-derived values carry small digitization error; table values are exact.</li>
+      <li><strong>Gas that leaks before reaching the turbine isn't priced in</strong> — real supply chains leak 1–3%, adding climate impact neither route pays for here.</li>
+      <li><strong>The v3 data library is display-only.</strong> NETL tables use different dollar vintages (2018$) and assumptions (85% capacity factor) than the GCCSI-based model; they are not mixed into any calculation.</li>
+    </ul></div></details>
+</main>
+</div>
 
-      document.getElementById("mainContent").innerHTML = `
-        <section class="visual-band" style="background-image:url('${STEWARD_DATA.images.park}')">
-          <div class="visual-band-overlay"></div>
-          <div class="visual-band-inner reveal">
-            <div class="visual-band-card">
-              <p class="section-label">The big picture</p>
-              <h2 class="section-title" style="font-size:1.75rem">$70 million · 30-year decision</h2>
-              <p class="section-desc" style="max-width:32rem">The town can <strong>borrow</strong> (about $364/year for a typical home) or pull from <strong>savings</strong> ($0/year extra). Use the tools below to explore.</p>
-            </div>
-          </div>
-        </section>
-        <section class="calc-section" id="explorer">
-          <div class="section-inner">
-            <div class="reveal">
-              <p class="section-label">Try it yourself</p>
-              <h2 class="section-title">Slide, tap, and see your number</h2>
-              <p class="section-desc">Everything updates live. Pick how the town pays, then see your yearly cost or the 30-year total.</p>
-            </div>
-            <div class="explorer-panel reveal reveal-delay-1">
-              <div class="toggle-row big-toggle-row">
-                <div class="toggle-group"><label>What do you want to see?</label>
-                  <div class="toggle-btns" data-group="view">
-                    <button type="button" class="active" data-val="fiscal">Cost to homeowners</button>
-                    <button type="button" data-val="sustainability">Parks & community</button>
-                  </div></div>
-                <div class="toggle-group"><label>How should the town pay?</label>
-                  <div class="toggle-btns" data-group="funding">
-                    <button type="button" class="active" data-val="bond">Borrow (bond)</button>
-                    <button type="button" data-val="fund">Use savings</button>
-                  </div></div>
-                <div class="toggle-group" id="metricToggleGroup"><label>Chart shows</label>
-                  <div class="toggle-btns" data-group="metric">
-                    <button type="button" class="active" data-val="annual">Each year</button>
-                    <button type="button" data-val="cumulative">All 30 years added up</button>
-                  </div></div>
-              </div>
-              <div id="explorerFiscal">
-                <div class="plain-box"><strong>Find your number on your property tax bill.</strong> It is called assessed value — not what Zillow says your home is worth. Typical North Castle home: ${fmt(th.medianAssessedValue)}.</div>
-                <div class="slider-block">
-                  <div class="slider-header"><h3>Your assessed value (from tax bill)</h3><span class="av-big" id="avDisplay">${fmt(assessedValue)}</span></div>
-                  <input type="range" id="avSlider" min="${minAV}" max="${maxAV}" step="100" value="${assessedValue}" aria-label="Assessed value slider">
-                  <div class="av-input-row"><label for="avInput">Or type it:</label><input type="number" id="avInput" min="${minAV}" max="${maxAV}" step="100" value="${assessedValue}"></div>
-                </div>
-                <div id="simpleViz" class="simple-viz" aria-live="polite"></div>
-                <div class="chart-stat-row">
-                  <div class="chart-stat" id="stat1"><div class="num">—</div><div class="lbl">—</div></div>
-                  <div class="chart-stat" id="stat2"><div class="num">—</div><div class="lbl">—</div></div>
-                  <div class="chart-stat" id="stat3"><div class="num">—</div><div class="lbl">—</div></div>
-                </div>
-                <div id="taxCompareBlock" style="margin-top:1.25rem"></div>
-              </div>
-              <div id="explorerSustain" class="hidden">
-                <div class="sustain-grid">${sustainCards}</div>
-                <div style="margin-top:1.5rem"><p class="section-label">Project scope</p><ul class="feature-list">${th.includes.map(i => `<li>${i}</li>`).join("")}</ul></div>
-              </div>
-            </div>
-            <div class="compare-grid reveal" style="margin-top:2.5rem">
-              <div class="compare-panel bond"><h4>Option A · Town borrows $40M</h4><div class="compare-amount">${fmtDec(medianImpact)}</div><p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.25rem">extra per year · typical home</p></div>
-              <div class="compare-panel fund"><h4>Option B · Town uses savings</h4><div class="compare-amount">$0</div><p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.25rem">extra per year on your bill</p></div>
-            </div>
-            <div class="stats-ticker reveal" style="margin-top:2rem">
-              <div class="stat-cell"><div class="val">${fmt(th.totalCost)}</div><div class="lbl">Total</div></div>
-              <div class="stat-cell"><div class="val">${fmt(th.bondAmount)}</div><div class="lbl">Bond</div></div>
-              <div class="stat-cell"><div class="val">${fmtNum(th.totalHouseholds)}</div><div class="lbl">Households</div></div>
-              <div class="stat-cell"><div class="val">${STEWARD_DATA.bondRating}</div><div class="lbl">Rating</div></div>
-            </div>
-          </div>
-        </section>
-        <section id="funding"><div class="section-inner">
-          <div class="reveal"><p class="section-label">Where the money comes from</p><h2 class="section-title" style="font-size:1.35rem">The $70M pie chart</h2>
-          <p class="section-desc">Not all from your taxes — schools, grants, and town savings chip in.</p>
-          <ul class="funding-list" id="fundingList" style="max-width:40rem;margin-top:1rem"></ul><p class="source-line">${th.dataSource}</p></div>
-        </div></section>`;
+<script>
+"use strict";
+/* ============ PROVENANCE LEDGER (v2.1 entries unchanged; v3 library entries appended) ============ */
+const SOURCES=[
+ {p:"Capture cost anchor",v:"$77.26 /t",src:"GCCSI 2025",loc:"Figure 9 (1 Mtpa MEA, 90% capture)",st:"exact",note:"Printed value; the whole model is anchored here."},
+ {p:"Capture cost vs capture %",v:"45%→$105 … 90%→$77.26 … 99%→$77.5",src:"GCCSI 2025",loc:"Figure 16",st:"readoff",note:"Digitized from chart, ±$1–2. Coal-referenced flue gas."},
+ {p:"Scaling exponent n",v:"0.7 (range 0.6–0.8)",src:"GCCSI 2025",loc:"§3.7.2",st:"exact",note:"Range printed; midpoint chosen. Applied to capital share only."},
+ {p:"Capital share of capture $/t",v:"30%",src:"model judgment",loc:"anchored in Figs 7–8",st:"estimate",note:"Not a printed number. Adjustable assumption."},
+ {p:"Compression+pumping table",v:"$19.52 → $10.49 (1k–25k t/day)",src:"GCCSI 2025",loc:"Table 11",st:"exact",note:"Seven exact rows; power law fitted through them."},
+ {p:"Compression energy floor",v:"$7.34 /t at all flows",src:"GCCSI 2025",loc:"Tables 10–11, §4.1.3",st:"exact",note:"Report: energy cost has no economies of scale."},
+ {p:"Compression non-energy fit",v:"12.18·(328500/tpy)^0.59",src:"fit to Table 11",loc:"rows 1–4",st:"fitted",note:"R² in QA. Extrapolated below 328,500 t/yr."},
+ {p:"Pipeline cost (dense phase)",v:"0.0603·Q^−0.77 $/t/km",src:"fit to GCCSI Fig 22",loc:"Figure 22",st:"fitted",note:"Flat onshore terrain; land excluded (§4.2)."},
+ {p:"Storage cost",v:"$0–40 /t slider (default 12)",src:"none",loc:"GCCSI series Part 2 (unavailable)",st:"estimate",note:"Placeholder."},
+ {p:"Emission factor, combined cycle",v:"0.37 t/MWh",src:"EPA/EIA-range",loc:"external",st:"estimate",note:"Replace with fleet-specific value when known."},
+ {p:"Emission factor, simple cycle",v:"0.56 t/MWh",src:"EPA/EIA-range",loc:"external",st:"estimate",note:""},
+ {p:"45Q credit / minimum",v:"$85/t · 18,750 t/yr floor",src:"IRS statute (IRA 2022)",loc:"26 USC §45Q",st:"single",note:"Single source, but statutory."},
+ {p:"CH₄ GWP₁₀₀",v:"28–36 slider (29.8 = AR6 fossil)",src:"IPCC AR5/AR6",loc:"assessment reports",st:"readoff",note:"Range across IPCC vintages exposed to the user."},
+ {p:"CH₄ combustion factor",v:"2.75 t CO₂/t CH₄",src:"chemistry (44/16)",loc:"CH₄+2O₂→CO₂+2H₂O",st:"exact",note:""},
+ {p:"Flare destruction efficiency",v:"98%",src:"general knowledge",loc:"typical regulatory assumption",st:"estimate",note:"Field studies report lower."},
+ {p:"Cooling PUE (evap/air/liquid)",v:"1.20 / 1.40 / 1.12",src:"general knowledge",loc:"industry ranges",st:"estimate",note:"UNVERIFIED — awaiting primary cooling sources."},
+ {p:"Cooling WUE (evap/air/liquid)",v:"1.40 / 0.05 / 0.15 L/kWh",src:"general knowledge",loc:"industry ranges",st:"estimate",note:"UNVERIFIED — same."},
+ {p:"Water price anchor",v:"$0.0317 /m³ (slider 0.03–2.00)",src:"GCCSI 2025",loc:"utility cost table",st:"single",note:"Industrial rate; cities/dry regions much higher."},
+ /* --- v3 Data Library (display-only, not used in model) --- */
+ {p:"[Library] NGCC case matrix, net power",v:"6 cases, 640–992 MW",src:"NETL FEB Rev 4a (Oct 2022)",loc:"case configuration table",st:"exact",note:"Display-only. 2018$, 85% CF, CANSOLV vendor quote."},
+ {p:"[Library] Cost of CO₂ capture, F-class 90%",v:"$61 /t (was $80 pre-update)",src:"NETL FEB Rev 4a",loc:"NETL release, Oct 2022",st:"exact",note:"Display-only; not mixed with the GCCSI anchor."},
+ {p:"[Library] Capture penalties",v:"LCOE +52–60% · efficiency −11–12 pts · 90→95% adds +1.8% LCOE",src:"NETL FEB Rev 4a",loc:"study highlights",st:"exact",note:"Display-only."},
+ {p:"[Library] Flexibility table (11 cases)",v:"start times, ramp, min load",src:"NETL FEB Vol 5 (May 2023)",loc:"results table",st:"exact",note:"Display-only. Vol 5 plants are not capture-ready."},
+ {p:"[Library] EGR headline results",v:"−$0.61 to −$0.68 /MWh @ 50% EGR; capex up to 4% lower",src:"NETL NGCC+EGR study (2024)",loc:"LCOE results",st:"exact",note:"Display-only. Consistent with EPRI."}
+];
 
-      const list = document.getElementById("fundingList");
-      th.fundingBreakdown.forEach(item => {
-        const pct = (item.amount / th.totalCost) * 100;
-        const li = document.createElement("li");
-        li.className = "funding-item";
-        li.innerHTML = `<div class="funding-header"><span>${item.source}</span><span>${fmt(item.amount)}</span></div><div class="funding-bar"><div class="funding-fill" data-width="${pct}"></div></div>`;
-        list.appendChild(li);
-      });
+/* ============ MODEL (identical to v2.1) ============ */
+const FIG16=[[45,105],[50,99],[55,94],[60,90],[65,87],[70,84],[75,81.5],[80,79.5],[85,78],[90,77.26],[95,77.0],[99,77.5]];
+const CAPEX_SHARE=0.30,SCALE_N=0.7,COMP_ENERGY_FLOOR=7.34,COMP_MIN_STUDIED_TPY=328500;
+const Q45_MIN_TPY=18750,STOICH=44/16,FLARE_DRE=0.98;
+const COOLING={evap:{label:"Evaporative",pue:1.20,wue:1.40},air:{label:"Air / dry",pue:1.40,wue:0.05},liquid:{label:"Liquid loop",pue:1.12,wue:0.15}};
+const TABLE11=[[328500,19.52],[821250,14.41],[1642500,12.05],[3285000,10.49],[4927500,11.06],[6570000,10.49],[8212500,10.84]];
+const FIG22_READOFFS=[[0.33,0.14],[1.0,0.060],[2.0,0.035],[5.0,0.017]];
 
-      bindCalculator(minAV, maxAV);
-      bindExplorerToggles();
-      bindPhotoStrip();
-      renderTaxCompare(assessedValue);
-      renderSimpleChart();
-      observeReveals();
-      animateFundingBars();
-    }
+function fig16(f){
+  if(f<=FIG16[0][0])return FIG16[0][1];
+  if(f>=FIG16[FIG16.length-1][0])return FIG16[FIG16.length-1][1];
+  for(let i=0;i<FIG16.length-1;i++){const[x0,y0]=FIG16[i],[x1,y1]=FIG16[i+1];
+    if(f>=x0&&f<=x1)return y0+(y1-y0)*(f-x0)/(x1-x0);}
+  return 77.26;
+}
+function captureCostPerT(fr,Mtpa){const Q=Math.min(Math.max(Mtpa,0.02),3.0);
+  return fig16(fr)*((1-CAPEX_SHARE)+CAPEX_SHARE*Math.pow(Q,SCALE_N-1));}
+function compressionPerT(tpy){const t=Math.max(tpy,1);
+  return COMP_ENERGY_FLOOR+Math.min(45,Math.max(3.15,12.18*Math.pow(328500/t,0.59)));}
+function pipelinePerTKm(Mtpa){const Q=Math.min(Math.max(Mtpa,0.05),5.0);return 0.0603*Math.pow(Q,-0.77);}
+function computeChain(tpy,fr,dist,store){const cap=captureCostPerT(fr,tpy/1e6),comp=compressionPerT(tpy),pipe=pipelinePerTKm(tpy/1e6)*dist;
+  return{cap,comp,pipe,store,total:cap+comp+pipe+store};}
+function routeCosts(g,c,chain,credit,tax){return{vent:g*tax,capture:c*(chain-credit)+(g-c)*tax};}
 
-    function bindCalculator(minAV, maxAV) {
-      const slider = document.getElementById("avSlider");
-      const input = document.getElementById("avInput");
-      if (!slider || !input) return;
-      function updateAV(val) {
-        val = Math.max(minAV, Math.min(maxAV, Math.round(val / 100) * 100));
-        assessedValue = val;
-        slider.value = val;
-        input.value = val;
-        document.getElementById("avDisplay").textContent = fmt(val);
-        updateTotals();
-        renderTaxCompare(val);
-        renderSimpleChart();
-      }
-      slider.addEventListener("input", () => updateAV(Number(slider.value)));
-      input.addEventListener("change", () => updateAV(Number(input.value)));
-    }
+/* ============ UNIT TESTS (identical logic to v2.1) ============ */
+function runTests(){
+  const T=[];const t=(n,ok,d)=>T.push({name:n,ok,detail:d||""});
+  const resid=[];
+  TABLE11.forEach(([tpy,v])=>{const m=compressionPerT(tpy),r=m-v;resid.push(r);
+    const tol=tpy<=3285000?0.05:0.75;
+    t(`T1 compression @ ${tpy.toLocaleString()} t/yr = $${v}`,Math.abs(r)<=tol,`model $${m.toFixed(2)}, residual ${r>=0?"+":""}${r.toFixed(2)}, tol ±${tol}`);});
+  const mean=TABLE11.reduce((a,[,v])=>a+v,0)/TABLE11.length;
+  const r2c=1-resid.reduce((a,r)=>a+r*r,0)/TABLE11.reduce((a,[,v])=>a+(v-mean)**2,0);
+  t("T1b compression fit R² > 0.97",r2c>0.97,`R² = ${r2c.toFixed(4)}`);
+  t("T2 capture(90%, 1 Mtpa) === $77.26 (Figure 9)",Math.abs(captureCostPerT(90,1.0)-77.26)<1e-9,`$${captureCostPerT(90,1.0).toFixed(4)}`);
+  t("T3 Fig16 anchors reproduced exactly",FIG16.every(([x,y])=>Math.abs(fig16(x)-y)<1e-9));
+  let mono=true;for(let a=45;a<95;a++)if(fig16(a)<fig16(a+1)-1e-9)mono=false;
+  t("T3b Fig16 monotone declining 45–95%",mono);
+  const rp=[];
+  FIG22_READOFFS.forEach(([q,v])=>{const m=pipelinePerTKm(q),r=m-v;rp.push(r);
+    t(`T4 pipeline @ ${q} Mtpa ≈ $${v}/t/km`,Math.abs(r)<=0.012,`model $${m.toFixed(3)}, residual ${r>=0?"+":""}${r.toFixed(3)}`);});
+  const mp=FIG22_READOFFS.reduce((a,[,v])=>a+v,0)/4;
+  const r2p=1-rp.reduce((a,r)=>a+r*r,0)/FIG22_READOFFS.reduce((a,[,v])=>a+(v-mp)**2,0);
+  t("T4b pipeline fit R² > 0.95",r2p>0.95,`R² = ${r2p.toFixed(4)}`);
+  let ok5=true,seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  for(let i=0;i<500;i++){
+    const mw=10+rnd()*990,ef=rnd()<0.5?0.37:0.56,f=0.5+rnd()*0.49,cf=0.3+rnd()*0.7;
+    const d=rnd()*400,tax=rnd()*200,cr=rnd()*250,st=rnd()*40;
+    const G=mw*8760*cf*ef,C=G*f,ch=computeChain(C,f*100,d,st).total;
+    const{vent,capture}=routeCosts(G,C,ch,cr,tax);
+    if(Math.abs((vent-capture)-C*(cr+tax-ch))>1e-6*Math.max(1,Math.abs(vent)))ok5=false;}
+  t("T5 accounting identity across 500 random configs",ok5,"vent − capture ≡ captured·(credit+tax−chain)");
+  {const G=100*8760*0.9*0.37,C=G*0.9,ch=computeChain(C,90,100,12).total,be=ch-50;
+   const{vent,capture}=routeCosts(G,C,ch,be,50);
+   t("T6 at credit = chain − tax, routes tie",Math.abs(vent-capture)<1e-6*vent,`chain $${ch.toFixed(2)}, breakeven $${be.toFixed(2)}`);}
+  t("T7 45Q flag fires strictly below 18,750 t/yr",(18749<Q45_MIN_TPY)&&!(18750<Q45_MIN_TPY));
+  t("T8 stoichiometry 44/16 === 2.75",Math.abs(STOICH-2.75)<1e-12);
+  const g8=29.8,flr=FLARE_DRE*STOICH+(1-FLARE_DRE)*g8;
+  t("T8b ordering: leaked > flared > burned > burned+90% captured",g8>flr&&flr>STOICH&&STOICH>STOICH*0.1,`${g8} > ${flr.toFixed(2)} > 2.75 > 0.275`);
+  const g1=100*8760*0.9*0.37;
+  t("T9 CO₂ scales linearly with PUE (all cooling modes)",Object.values(COOLING).every(c=>Math.abs((100*c.pue*8760*0.9*0.37)/g1-c.pue)<1e-12));
+  const v1ids=["size","capfrac","cf","dist","tax","credit","storage"];
+  t("T10 all v1 slider controls present",v1ids.every(id=>document.getElementById(id)));
+  t("T10b v1 turbine radio present",!!document.querySelector('input[name=turbine]'));
+  return{tests:T,r2c,r2p,resid,rp};
+}
 
-    function updateTotals() {
-      const impact = bondAnnualImpact(assessedValue);
-      document.getElementById("totalBig").textContent = fmtDec(impact);
-      const sub = document.getElementById("totalSub");
-      if (sub) {
-        sub.textContent = assessedValue === STEWARD_DATA.townHall.medianAssessedValue
-          ? "per year · town median · 30-year bond"
-          : "per year · at " + fmt(assessedValue) + " assessed value";
-      }
-    }
+const REGRESSION=[
+ ["Size slider (10 MW–1 GW)","preserved — labeled 'computer load'; total = IT × PUE"],
+ ["Turbine type radio","preserved — plain radios"],
+ ["Capture fraction slider","preserved — labeled 'CO₂ captured'"],
+ ["Capacity factor slider","preserved — labeled 'uptime'"],
+ ["Pipeline distance slider","preserved"],
+ ["Carbon tax slider","preserved"],
+ ["Credit price slider","preserved"],
+ ["Storage cost slider","preserved"],
+ ["Metric cards","preserved — st.metric style with deltas"],
+ ["Vent-vs-capture route cards","preserved — Decision tab"],
+ ["Three-way verdict","preserved — alert box under metrics, text tag instead of icon"],
+ ["Stacked $/t chart + credit line","preserved — Size tab"],
+ ["Break-even chart (v2)","preserved — Decision tab"],
+ ["45Q / extrapolation / coal-reference flags","preserved — text tags instead of icons"],
+ ["Methane module + GWP slider (v2)","preserved — Methane tab"],
+ ["Cooling module + water cards (v2)","preserved — Cooling tab + metrics"],
+ ["QA panel: tests, fits, provenance (v2)","preserved — QA tab, in expanders"],
+ ["TRL technology table","preserved — reference expander"],
+ ["Glossary","preserved — 4 library terms added"],
+ ["Caveats","preserved — 1 library caveat added"],
+ ["60-second primer","preserved"],
+ ["Changelog + regression checklist (v2)","preserved — v3 entries added"],
+ ["Data library tab","new in v3 — 3 sources, display-only"],
+ ["Emoji-free UI","new in v3"]
+];
 
-    function bindPhotoStrip() {
-      const lb = document.getElementById("lightbox");
-      const lbImg = document.getElementById("lightboxImg");
-      document.querySelectorAll("#photoStrip img").forEach(img => {
-        img.addEventListener("click", () => {
-          lbImg.src = img.dataset.full || img.src;
-          lbImg.alt = img.dataset.cap || "";
-          lb.classList.add("open");
-        });
-      });
-      document.getElementById("lightboxClose").onclick = () => lb.classList.remove("open");
-      lb.onclick = (e) => { if (e.target === lb) lb.classList.remove("open"); };
-    }
+/* ============ UI ============ */
+const $=id=>document.getElementById(id);
+const fmt$=x=>(x<0?"−$":"$")+Math.abs(x).toLocaleString(undefined,{maximumFractionDigits:0});
+const fmt$2=x=>"$"+x.toFixed(2);
+const fmtT=x=>x.toLocaleString(undefined,{maximumFractionDigits:0});
+const fmtM$=x=>(x<0?"−$":"$")+(Math.abs(x)/1e6).toLocaleString(undefined,{maximumFractionDigits:1})+"M";
+function sliderToMW(x){return Math.round(10*Math.pow(100,x/100));}
+let stackChart=null,ch4Chart=null,beChart=null;
 
-    function animateFundingBars() {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.querySelectorAll(".funding-fill").forEach(bar => { bar.style.width = bar.dataset.width + "%"; });
-            obs.disconnect();
-          }
-        });
-      }, { threshold: 0.2 });
-      const list = document.getElementById("fundingList");
-      if (list) obs.observe(list);
-    }
+function readInputs(){return{
+  it:sliderToMW(+$("size").value),
+  ef:+document.querySelector('input[name=turbine]:checked').value,
+  cool:document.querySelector('input[name=cooling]:checked').value,
+  wp:+$("waterprice").value/100,
+  frac:+$("capfrac").value,cf:+$("cf").value/100,
+  dist:+$("dist").value,tax:+$("tax").value,credit:+$("credit").value,
+  storage:+$("storage").value,gwp:+$("gwp").value};}
 
-    function observeReveals() {
-      document.querySelectorAll(".reveal, .compare-panel").forEach(el => {
-        const obs = new IntersectionObserver((entries) => {
-          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
-        }, { threshold: 0.12 });
-        obs.observe(el);
-      });
-    }
+function tipSpan(txt){return `<span class="tip" tabindex="0" data-tip="${txt}">?</span>`;}
 
-    function boot() {
-      document.getElementById("heroBg").style.backgroundImage = `url('${STEWARD_DATA.images.hero}')`;
-      renderStaticContent();
-      renderShowcase();
-      renderDashboard();
-      updateTotals();
-      observeReveals();
-    }
+function update(){
+  const s=readInputs(),c=COOLING[s.cool];
+  $("sizeVal").textContent=s.it>=1000?"1 GW":s.it+" MW";
+  $("waterpriceVal").textContent="$"+s.wp.toFixed(2)+"/m³";
+  $("capfracVal").textContent=s.frac+"%";
+  $("cfVal").textContent=Math.round(s.cf*100)+"%";
+  $("distVal").textContent=s.dist+" km";
+  $("taxVal").textContent="$"+s.tax+"/t";
+  $("creditVal").textContent="$"+s.credit+"/t";
+  $("storageVal").textContent="$"+s.storage+"/t";
+  $("gwpVal").textContent=s.gwp+"×";
 
-    window.addEventListener("scroll", () => {
-      document.getElementById("mainNav").classList.toggle("scrolled", window.scrollY > 60);
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      document.getElementById("scrollProgress").style.width = (h > 0 ? window.scrollY / h * 100 : 0) + "%";
-    }, { passive: true });
+  const totMW=s.it*c.pue, mwhIT=s.it*8760*s.cf, mwhTot=totMW*8760*s.cf;
+  const gross=mwhTot*s.ef, captured=gross*s.frac/100, residual=gross-captured;
+  const chain=computeChain(captured,s.frac,s.dist,s.storage);
+  const waterM3=mwhIT*1000*c.wue/1000, waterCost=waterM3*s.wp;
+  const {vent,capture}=routeCosts(gross,captured,chain.total,s.credit,s.tax);
+  const beVsVent=Math.max(0,chain.total-s.tax);
+  const captureBetter=capture<vent, best=Math.min(vent,capture);
+  const savings=vent-capture;
 
-    resolveAssetBase(() => {
-      patchGalleryPaths();
-      boot();
-    });
-  </script>
+  /* st.metric cards */
+  $("cards").innerHTML=`
+    <div class="metric"><div class="k">Total power needed ${tipSpan("Computers plus cooling overhead. Your "+c.label.toLowerCase()+" cooling adds "+Math.round((c.pue-1)*100)+"% on top of the "+s.it+" MW of computers.")}</div>
+      <div class="v">${totMW>=1000?(totMW/1000).toFixed(2)+" GW":Math.round(totMW)+" MW"}</div>
+      <div class="d flat">${s.it} MW computers + ${Math.round(totMW-s.it)} MW cooling</div></div>
+    <div class="metric"><div class="k">CO₂ per year ${tipSpan("Everything the gas turbines emit, including the extra gas burned for cooling. For scale: a typical car emits ~4.6 tonnes a year.")}</div>
+      <div class="v">${gross>=1e6?(gross/1e6).toFixed(2)+" Mt":fmtT(gross)+" t"}</div>
+      <div class="d flat">${fmtT(captured)} t captured, ${fmtT(residual)} t escapes</div></div>
+    <div class="metric"><div class="k">Cost to bury 1 tonne ${tipSpan("The full chain: scrub it ("+fmt$2(chain.cap)+") + compress it ("+fmt$2(chain.comp)+") + pipe it "+s.dist+" km ("+fmt$2(chain.pipe)+") + inject it ("+fmt$2(chain.store)+").")}</div>
+      <div class="v">${fmt$2(chain.total)}</div>
+      <div class="d ${s.credit>=chain.total?'up':'down'}">${s.credit>=chain.total?"▲ credit covers it":"▼ credit falls $"+(chain.total-s.credit).toFixed(0)+" short"}</div></div>
+    <div class="metric"><div class="k">Water per year ${tipSpan("Cooling water consumed. An Olympic pool holds 2,500 m³. This cost hits you whichever CO₂ route you pick. Estimate — pending verified cooling data.")}</div>
+      <div class="v">${waterM3>=1e6?(waterM3/1e6).toFixed(1)+"M m³":fmtT(waterM3)+" m³"}</div>
+      <div class="d flat">${fmt$(waterCost)}/yr · ≈ ${fmtT(waterM3/2500)} Olympic pools</div></div>
+    <div class="metric"><div class="k">Best choice, bottom line ${tipSpan("The yearly result of the cheaper route. Negative (green) means the operation MAKES money from carbon credits.")}</div>
+      <div class="v" style="color:${best<0?'var(--green)':'inherit'}">${fmtM$(best)}${best<0?"":"/yr"}</div>
+      <div class="d ${captureBetter?'up':'down'}">${captureBetter?"▲ capture wins by "+fmtM$(Math.abs(savings)):"▼ venting wins by "+fmtM$(Math.abs(savings))}</div></div>`;
+
+  /* verdict */
+  let cls,tag,head,body;
+  if(capture<0){cls="success";tag="Verdict";head="Capture makes money here.";
+    body=`Credits ($${s.credit}/t) beat the ${fmt$2(chain.total)}/t chain cost with room to cover tax on what escapes — netting ${fmtM$(-capture)} per year.`;}
+  else if(captureBetter){cls="info";tag="Verdict";head="Capture costs money — but less than venting.";
+    body=`You'd save ${fmtM$(savings)}/yr versus paying $${s.tax}/t tax on everything. Capture works here as a cost reducer, not a money maker.`;}
+  else{cls="warning";tag="Verdict";head="Venting is cheaper at this setup.";
+    body=`Burying costs ${fmt$2(chain.total)}/t but credit + avoided tax only recover ${fmt$2(s.credit+s.tax)}/t. The credit would need to hit ${fmt$2(beVsVent)}/t just to tie. Try a bigger plant, a shorter pipeline, or higher policy prices.`;}
+  if(captured<Q45_MIN_TPY&&captureBetter)body+=" (Careful: this result leans on credits the project is too small to legally claim.)";
+  $("verdict").innerHTML=`<div class="alert ${cls}"><span class="tag">${tag}</span><div><strong>${head}</strong>${body}</div></div>`;
+
+  /* flags */
+  let flags="";
+  if(captured<Q45_MIN_TPY)flags+=`<div class="alert error"><span class="tag">45Q</span><div><strong>Too small for the 45Q credit.</strong> This setup captures ${fmtT(captured)} t/yr — under the 18,750 t/yr legal minimum for power plants, so it can't claim the US credit at all.</div></div>`;
+  if(captured<COMP_MIN_STUDIED_TPY)flags+=`<div class="alert warning"><span class="tag">Data</span><div><strong>Beyond the data.</strong> ${fmtT(captured)} t/yr is smaller than anything the source report studied (min 328,500 t/yr) — compression costs here are extrapolated.</div></div>`;
+  $("flags").innerHTML=flags;
+
+  /* routes */
+  const winnerVent=!captureBetter;
+  $("routes").innerHTML=`
+    <div class="route ${winnerVent?'winner':''}">${winnerVent?'<span class="tag">CHEAPER</span>':''}
+      <h3>Route A — Vent it</h3>
+      <table>
+        <tr><td>CO₂ released</td><td>${fmtT(gross)} t/yr</td></tr>
+        <tr><td>Carbon tax @ $${s.tax}/t</td><td>${fmt$(vent)}</td></tr>
+        <tr><td>Equipment</td><td>$0</td></tr>
+        <tr class="total"><td>Yearly cost</td><td>${fmt$(vent)}</td></tr>
+      </table></div>
+    <div class="route ${!winnerVent?'winner':''}">${!winnerVent?'<span class="tag">'+(capture<0?'MAKES MONEY':'CHEAPER')+'</span>':''}
+      <h3>Route B — Capture &amp; bury it</h3>
+      <table>
+        <tr><td>Chain on ${fmtT(captured)} t @ ${fmt$2(chain.total)}/t</td><td>${fmt$(captured*chain.total)}</td></tr>
+        <tr><td>Credits earned @ $${s.credit}/t</td><td>−${fmt$(captured*s.credit)}</td></tr>
+        <tr><td>Tax on the ${fmtT(residual)} t missed</td><td>${fmt$(residual*s.tax)}</td></tr>
+        <tr class="total"><td>Yearly ${capture<0?"profit":"cost"}</td><td>${fmt$(capture)}</td></tr>
+      </table></div>`;
+
+  drawBreakeven(s,gross,captured,residual,chain);
+  drawStack(s,c);
+  drawCH4(s);
+}
+
+function drawBreakeven(s,gross,captured,residual,chain){
+  const xs=[];for(let cr=0;cr<=250;cr+=5)xs.push(cr);
+  const ventLine=xs.map(()=>gross*s.tax/1e6);
+  const capLine=xs.map(cr=>(captured*(chain.total-cr)+residual*s.tax)/1e6);
+  const be=Math.max(0,chain.total-s.tax);
+  const data={labels:xs,datasets:[
+    {label:"Vent + pay tax",data:ventLine,borderColor:"#808495",borderWidth:2,pointRadius:0},
+    {label:"Capture + earn credits",data:capLine,borderColor:"#0068c9",borderWidth:2.5,pointRadius:0},
+    {label:"You are here",data:xs.map(x=>Math.abs(x-s.credit)<=2.5?(captured*(chain.total-x)+residual*s.tax)/1e6:null),
+     borderColor:"#ff4b4b",backgroundColor:"#ff4b4b",pointRadius:7,showLine:false}
+  ]};
+  const opts={responsive:true,interaction:{mode:"index",intersect:false},
+    scales:{x:{title:{display:true,text:"Credit price ($ per tonne stored)"},ticks:{callback:(v,i)=>xs[i]%50===0?"$"+xs[i]:""}},
+            y:{title:{display:true,text:"Yearly cost, $M (below 0 = profit)"}}},
+    plugins:{legend:{position:"bottom",labels:{boxWidth:13,font:{size:12}}}}};
+  if(beChart){beChart.data=data;beChart.options=opts;beChart.update();}
+  else beChart=new Chart($("beChart"),{type:"line",data,options:opts});
+  $("beCap").innerHTML=`The lines cross at <strong>$${be.toFixed(0)}/t</strong>: below that credit price venting is cheaper, above it capture wins. The gray line is flat because venting only cares about the carbon tax ($${s.tax}/t), not the credit market. The red dot is your current credit setting ($${s.credit}/t).`;
+}
+
+function drawStack(s,c){
+  const sizes=[10,25,50,100,250,500,1000];
+  const rows=sizes.map(mw=>computeChain(mw*c.pue*8760*s.cf*s.ef*(s.frac/100),s.frac,s.dist,s.storage));
+  const labels=sizes.map(m=>m>=1000?"1 GW":m+" MW");
+  const data={labels,datasets:[
+    {label:"Scrubbing",data:rows.map(r=>r.cap),backgroundColor:"#0068c9",stack:"c"},
+    {label:"Compressing",data:rows.map(r=>r.comp),backgroundColor:"#83c9ff",stack:"c"},
+    {label:"Piping ("+s.dist+" km)",data:rows.map(r=>r.pipe),backgroundColor:"#29b09d",stack:"c"},
+    {label:"Burying (assumed)",data:rows.map(r=>r.store),backgroundColor:"#ffd16a",stack:"c"},
+    {label:"Credit price ($"+s.credit+"/t)",data:rows.map(()=>s.credit),type:"line",
+     borderColor:"#ff4b4b",borderDash:[7,5],borderWidth:2,pointRadius:0,fill:false}]};
+  const opts={responsive:true,interaction:{mode:"index"},
+    scales:{x:{stacked:true,grid:{display:false},title:{display:true,text:"Computer load"}},
+            y:{stacked:true,title:{display:true,text:"$ per tonne, full chain"}}},
+    plugins:{legend:{position:"bottom",labels:{boxWidth:13,font:{size:12}}},
+      tooltip:{callbacks:{footer:it=>{const t=it.filter(i=>i.dataset.stack==="c").reduce((a,i)=>a+i.parsed.y,0);
+        return "Full chain: $"+t.toFixed(2)+"/t";}}}}};
+  if(stackChart){stackChart.data=data;stackChart.options=opts;stackChart.update();}
+  else stackChart=new Chart($("stackChart"),{type:"bar",data,options:opts});
+  $("stackCap").innerHTML=`Small plants pay dearly per tonne (equipment is spread over little CO₂); costs fall fast with size, then level off — the report finds most savings are exhausted by ~1–3 Mt/yr. The $7.34/t compression <em>energy</em> share never shrinks: it's physics, not equipment.`;
+}
+
+function drawCH4(s){
+  const flared=FLARE_DRE*STOICH+(1-FLARE_DRE)*s.gwp, capt=STOICH*(1-s.frac/100);
+  const data={labels:["Leaks into the air","Flared off (98% burned)","Burned for power, CO₂ vented",`Burned + ${s.frac}% captured`],
+    datasets:[{data:[s.gwp,flared,STOICH,capt],backgroundColor:["#ff4b4b","#ff9f4b","#808495","#0068c9"]}]};
+  const opts={indexAxis:"y",responsive:true,plugins:{legend:{display:false}},
+    scales:{x:{title:{display:true,text:"Climate impact of 1 tonne of methane (t CO₂-equivalent)"}}}};
+  if(ch4Chart){ch4Chart.data=data;ch4Chart.options=opts;ch4Chart.update();}
+  else ch4Chart=new Chart($("ch4Chart"),{type:"bar",data,options:opts});
+  $("ch4Cap").innerHTML=`At ${s.gwp}× potency, just <em>burning</em> methane instead of leaking it cuts its climate impact ${(s.gwp/STOICH).toFixed(1)}-fold — and capturing ${s.frac}% of the resulting CO₂ leaves only ${capt.toFixed(2)} t CO₂e per tonne of methane, a ${(100*(1-capt/s.gwp)).toFixed(0)}% total reduction. Flaring assumes 98% burns (an estimate; real flares often do worse).`;
+}
+
+/* QA rendering */
+function renderQA(){
+  const{tests,r2c,r2p,resid,rp}=runTests();
+  const passed=tests.filter(t=>t.ok).length;
+  $("qaSummary").innerHTML=`<div class="qa-big ${passed===tests.length?'allpass':'somefail'}">${passed} / ${tests.length} tests passed ${passed===tests.length?'PASS':'FAIL'}</div>`;
+  $("qaTests").innerHTML=`<table class="data"><thead><tr><th>Result</th><th>Test</th><th>Detail</th></tr></thead><tbody>`+
+    tests.map(t=>`<tr><td class="${t.ok?'pass':'fail'}">${t.ok?'PASS':'FAIL'}</td><td>${t.name}</td><td class="mono">${t.detail}</td></tr>`).join("")+`</tbody></table>`;
+  $("qaFit").innerHTML=`<table class="data">
+    <thead><tr><th>Fit</th><th>Formula</th><th>R²</th><th>Residuals vs source</th><th>Notes</th></tr></thead><tbody>
+    <tr><td>Compression + pumping</td><td class="mono">7.34 + 12.18·(328500/tpy)^0.59</td><td class="mono">${r2c.toFixed(4)}</td>
+      <td class="mono">${resid.map(r=>(r>=0?"+":"")+r.toFixed(2)).join(", ")}</td>
+      <td>First four table rows matched to ≤$0.02. The −0.57/−0.35 residuals are the report's own zig-zags (compressors come in discrete sizes); the fit smooths through them.</td></tr>
+    <tr><td>Pipeline (dense phase)</td><td class="mono">0.0603·Q^−0.77</td><td class="mono">${r2p.toFixed(4)}</td>
+      <td class="mono">${rp.map(r=>(r>=0?"+":"")+r.toFixed(3)).join(", ")}</td>
+      <td>R² measured against values read off the report's Figure 22 chart, not raw data.</td></tr>
+    <tr><td>Capture vs capture %</td><td class="mono">straight lines between 12 anchor points</td><td class="mono">1.0000 (by construction)</td>
+      <td class="mono">0 at anchors</td><td>Anchors are chart read-offs (±$1–2), except the exact $77.26 at 90%.</td></tr>
+    </tbody></table>`;
+  $("qaProv").innerHTML=`<table class="data"><thead><tr><th>Number</th><th>Value</th><th>Source</th><th>Where exactly</th><th>Trust level</th><th>Notes</th></tr></thead><tbody>`+
+    SOURCES.map(s=>`<tr><td><strong>${s.p}</strong></td><td class="mono">${s.v}</td><td>${s.src}</td><td>${s.loc}</td><td><span class="badge ${s.st}">${{exact:"exact",readoff:"read-off",fitted:"fitted",estimate:"estimate",single:"single source",stale:"stale"}[s.st]}</span></td><td>${s.note}</td></tr>`).join("")+`</tbody></table>`;
+  $("qaRegression").innerHTML=`<table class="data"><thead><tr><th>Feature</th><th>Status in this build</th></tr></thead><tbody>`+
+    REGRESSION.map(([f,st])=>`<tr><td>${f}</td><td>${st}</td></tr>`).join("")+`</tbody></table>`;
+}
+
+/* Tabs */
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".tabpane").forEach(x=>x.classList.remove("show"));
+  b.classList.add("active");
+  document.getElementById(b.dataset.tab).classList.add("show");
+}));
+
+/* Wire up */
+["size","waterprice","capfrac","cf","dist","tax","credit","storage","gwp"].forEach(id=>$(id).addEventListener("input",update));
+document.querySelectorAll('input[name=turbine],input[name=cooling]').forEach(r=>r.addEventListener("change",update));
+update();
+renderQA();
+</script>
 </body>
 </html>
